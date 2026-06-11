@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ChevronsUpDown, Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +22,14 @@ type TeamSwitcherProps = {
     name: string
     logo: React.ElementType
     plan: string
+    planKey?: string
   }[]
 }
 
 export function TeamSwitcher({ teams }: TeamSwitcherProps) {
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const { t } = useTranslation()
 
   return (
     <SidebarMenu>
@@ -44,7 +47,9 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
                 <span className='truncate font-semibold'>
                   {activeTeam.name}
                 </span>
-                <span className='truncate text-xs'>{activeTeam.plan}</span>
+                <span className='truncate text-xs'>
+                  {activeTeam.planKey ? t(activeTeam.planKey) : activeTeam.plan}
+                </span>
               </div>
               <ChevronsUpDown className='ms-auto' />
             </SidebarMenuButton>
@@ -56,7 +61,7 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
             sideOffset={4}
           >
             <DropdownMenuLabel className='text-xs text-muted-foreground'>
-              Teams
+              {t('sidebar.teams.label')}
             </DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem
@@ -76,7 +81,9 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
               <div className='flex size-6 items-center justify-center rounded-md border bg-background'>
                 <Plus className='size-4' />
               </div>
-              <div className='font-medium text-muted-foreground'>Add team</div>
+              <div className='font-medium text-muted-foreground'>
+                {t('sidebar.teams.addTeam')}
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

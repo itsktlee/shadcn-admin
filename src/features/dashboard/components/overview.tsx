@@ -1,5 +1,8 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
+const axisColor = 'var(--muted-foreground)'
+const barColor = 'var(--chart-1)'
+
 const data = [
   {
     name: 'Jan',
@@ -57,25 +60,20 @@ export function Overview() {
       <BarChart data={data}>
         <XAxis
           dataKey='name'
-          stroke='#888888'
+          stroke={axisColor}
           fontSize={12}
           tickLine={false}
           axisLine={false}
         />
         <YAxis
           direction='ltr'
-          stroke='#888888'
+          stroke={axisColor}
           fontSize={12}
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `$${value}`}
         />
-        <Bar
-          dataKey='total'
-          fill='currentColor'
-          radius={[4, 4, 0, 0]}
-          className='fill-primary'
-        />
+        <Bar dataKey='total' fill={barColor} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

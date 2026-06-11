@@ -14,22 +14,49 @@ export const callTypes = new Map<UserStatus, string>([
 export const roles = [
   {
     label: 'Superadmin',
+    labelKey: 'users.data.roles.superadmin',
     value: 'superadmin',
     icon: Shield,
   },
   {
     label: 'Admin',
+    labelKey: 'users.data.roles.admin',
     value: 'admin',
     icon: UserCheck,
   },
   {
     label: 'Manager',
+    labelKey: 'users.data.roles.manager',
     value: 'manager',
     icon: Users,
   },
   {
     label: 'Cashier',
+    labelKey: 'users.data.roles.cashier',
     value: 'cashier',
     icon: CreditCard,
+  },
+] as const
+
+export const statuses = [
+  {
+    label: 'Active',
+    labelKey: 'users.data.statuses.active',
+    value: 'active',
+  },
+  {
+    label: 'Inactive',
+    labelKey: 'users.data.statuses.inactive',
+    value: 'inactive',
+  },
+  {
+    label: 'Invited',
+    labelKey: 'users.data.statuses.invited',
+    value: 'invited',
+  },
+  {
+    label: 'Suspended',
+    labelKey: 'users.data.statuses.suspended',
+    value: 'suspended',
   },
 ] as const

@@ -10,10 +10,12 @@ type Team = {
   name: string
   logo: React.ElementType
   plan: string
+  planKey?: string
 }
 
 type BaseNavItem = {
   title: string
+  titleKey?: string
   badge?: string
   icon?: React.ElementType
 }
@@ -32,6 +34,7 @@ type NavItem = NavCollapsible | NavLink
 
 type NavGroup = {
   title: string
+  titleKey?: string
   items: NavItem[]
 }
 

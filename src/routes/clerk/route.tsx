@@ -2,11 +2,13 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { ClerkProvider } from '@clerk/react'
 import { ExternalLink, Key } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout'
+import { LanguageSwitch } from '@/components/language-switch'
 import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
 
@@ -37,13 +39,13 @@ function RouteComponent() {
 }
 
 function MissingClerkPubKey() {
-  const codeBlock =
-    'bg-foreground/10 rounded-sm py-0.5 px-1 text-xs text-foreground font-bold'
+  const { t } = useTranslation()
   return (
     <AuthenticatedLayout>
       <div className='bg-backgroundh-16 flex justify-between p-4'>
         <SidebarTrigger variant='outline' className='scale-125 sm:scale-100' />
         <div className='space-x-4'>
+          <LanguageSwitch />
           <ThemeSwitch />
           <ConfigDrawer />
         </div>
@@ -52,20 +54,21 @@ function MissingClerkPubKey() {
         <div className='max-w-2xl'>
           <Alert>
             <Key className='size-4' />
-            <AlertTitle>No Publishable Key Found!</AlertTitle>
+            <AlertTitle>{t('clerk.route.missingKeyTitle')}</AlertTitle>
             <AlertDescription>
               <p className='text-balance'>
-                You need to generate a publishable key from Clerk and put it
-                inside the <code className={codeBlock}>.env</code> file.
+                {t('clerk.route.missingKeyDesc')}
               </p>
             </AlertDescription>
           </Alert>
 
-          <h1 className='mt-4 text-2xl font-bold'>Set your Clerk API key</h1>
+          <h1 className='mt-4 text-2xl font-bold'>
+            {t('clerk.route.setupTitle')}
+          </h1>
           <div className='mt-4 flex flex-col gap-y-4 text-foreground/75'>
             <ol className='list-inside list-decimal space-y-1.5'>
               <li>
-                In the{' '}
+                {t('clerk.route.stepOnePrefix')}{' '}
                 <a
                   href='https://go.clerk.com/GttUAaK'
                   target='_blank'
@@ -75,29 +78,20 @@ function MissingClerkPubKey() {
                   <sup>
                     <ExternalLink className='inline-block size-4' />
                   </sup>
-                </a>{' '}
-                Dashboard, navigate to the API keys page.
+                </a>
+                {t('clerk.route.stepOneSuffix')}
               </li>
-              <li>
-                In the <strong>Quick Copy</strong> section, copy your Clerk
-                Publishable Key.
-              </li>
-              <li>
-                Rename <code className={codeBlock}>.env.example</code> to{' '}
-                <code className={codeBlock}>.env</code>
-              </li>
-              <li>
-                Paste your key into your <code className={codeBlock}>.env</code>{' '}
-                file.
-              </li>
+              <li>{t('clerk.route.stepTwo')}</li>
+              <li>{t('clerk.route.stepThree')}</li>
+              <li>{t('clerk.route.stepFour')}</li>
             </ol>
-            <p>The final result should resemble the following:</p>
+            <p>{t('clerk.route.finalResult')}</p>
 
-            <div className='@container space-y-2 rounded-md bg-slate-800 px-3 py-3 text-sm text-slate-200'>
+            <div className='@container space-y-2 rounded-md border bg-card px-3 py-3 text-sm text-card-foreground/80'>
               <span className='ps-1'>.env</span>
-              <pre className='overflow-auto overscroll-x-contain rounded bg-slate-950 px-2 py-1 text-xs'>
+              <pre className='overflow-auto overscroll-x-contain rounded bg-muted px-2 py-1 text-xs text-foreground'>
                 <code>
-                  <span className='before:text-slate-400 md:before:pe-2 md:before:content-["1."]'>
+                  <span className='before:text-muted-foreground md:before:pe-2 md:before:content-["1."]'>
                     VITE_CLERK_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
                   </span>
                 </code>
@@ -108,24 +102,11 @@ function MissingClerkPubKey() {
           <Separator className='my-4 w-full' />
 
           <Alert>
-            <AlertTitle>Clerk Integration is Optional</AlertTitle>
+            <AlertTitle>{t('clerk.route.optionalTitle')}</AlertTitle>
             <AlertDescription>
-              <p className='text-balance'>
-                The Clerk integration lives entirely inside{' '}
-                <code className={codeBlock}>src/routes/clerk</code>. If you plan
-                to use Clerk as your auth service, you might want to place{' '}
-                <code className={codeBlock}>ClerkProvider</code> at the root
-                route.
-              </p>
-              <p>
-                However, if you don't plan to use Clerk, you can safely remove
-                this directory and related dependency_{' '}
-                <code className={codeBlock}>@clerk/react</code>.
-              </p>
-              <p className='mt-2 text-sm'>
-                This setup is modular by design and won't affect the rest of the
-                application.
-              </p>
+              <p className='text-balance'>{t('clerk.route.optionalDescOne')}</p>
+              <p>{t('clerk.route.optionalDescTwo')}</p>
+              <p className='mt-2 text-sm'>{t('clerk.route.optionalDescThree')}</p>
             </AlertDescription>
           </Alert>
         </div>

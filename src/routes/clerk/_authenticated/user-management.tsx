@@ -8,10 +8,12 @@ import {
 } from '@tanstack/react-router'
 import { useAuth, UserButton } from '@clerk/react'
 import { ExternalLink, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { ClerkLogo } from '@/assets/clerk-logo'
 import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
+import { LanguageSwitch } from '@/components/language-switch'
 import { Main } from '@/components/layout/main'
 import { LearnMore } from '@/components/learn-more'
 import { Search } from '@/components/search'
@@ -27,6 +29,7 @@ export const Route = createFileRoute('/clerk/_authenticated/user-management')({
 })
 
 function UserManagement() {
+  const { t } = useTranslation()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
 
@@ -49,6 +52,7 @@ function UserManagement() {
     <UsersProvider>
       <Header fixed>
         <Search className='me-auto' />
+        <LanguageSwitch />
         <ThemeSwitch />
         <ConfigDrawer />
         <UserButton />
@@ -57,10 +61,12 @@ function UserManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              {t('users.title')}
+            </h2>
             <div className='flex gap-1'>
               <p className='text-muted-foreground'>
-                Manage your users and their roles here.
+                {t('users.desc')}
               </p>
               <LearnMore
                 open={opened}
@@ -68,18 +74,17 @@ function UserManagement() {
                 contentProps={{ side: 'right' }}
               >
                 <p>
-                  This is the same as{' '}
+                  {t('clerk.userManagement.learnMoreUsers')}{' '}
                   <Link
                     to='/users'
-                    className='text-blue-500 underline decoration-dashed underline-offset-2'
+                    className='text-primary underline decoration-dashed underline-offset-2 hover:text-primary/80'
                   >
                     '/users'
                   </Link>
                 </p>
 
                 <p className='mt-4'>
-                  You can sign out or manage/delete your account via the User
-                  Profile menu in the top-right corner of the page.
+                  {t('clerk.userManagement.learnMoreProfile')}
                   <ExternalLink className='inline-block size-4' />
                 </p>
               </LearnMore>
@@ -98,6 +103,7 @@ function UserManagement() {
 const COUNTDOWN = 5 // Countdown second
 
 function Unauthorized() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { history } = useRouter()
 
@@ -124,38 +130,37 @@ function Unauthorized() {
     <div className='h-svh'>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
         <h1 className='text-[7rem] leading-tight font-bold'>401</h1>
-        <span className='font-medium'>Unauthorized Access</span>
+        <span className='font-medium'>
+          {t('clerk.userManagement.unauthorizedTitle')}
+        </span>
         <p className='text-center text-muted-foreground'>
-          You must be authenticated via Clerk{' '}
+          {t('clerk.userManagement.unauthorizedDescPrefix')}{' '}
           <sup>
             <LearnMore open={opened} onOpenChange={setOpened}>
               <p>
-                This is the same as{' '}
+                {t('clerk.userManagement.unauthorizedLearnMoreOne')}{' '}
                 <Link
                   to='/users'
-                  className='text-blue-500 underline decoration-dashed underline-offset-2'
+                  className='text-primary underline decoration-dashed underline-offset-2 hover:text-primary/80'
                 >
                   '/users'
                 </Link>
-                .{' '}
               </p>
-              <p>You must first sign in using Clerk to access this route. </p>
+              <p>{t('clerk.userManagement.unauthorizedLearnMoreTwo')}</p>
 
               <p className='mt-4'>
-                After signing in, you'll be able to sign out or delete your
-                account via the User Profile dropdown on this page.
+                {t('clerk.userManagement.unauthorizedLearnMoreThree')}
               </p>
             </LearnMore>
           </sup>
-          <br />
-          to access this resource.
+          {' '}{t('clerk.userManagement.unauthorizedDescSuffix')}
         </p>
         <div className='mt-6 flex gap-4'>
           <Button variant='outline' onClick={() => history.go(-1)}>
-            Go Back
+            {t('clerk.userManagement.goBack')}
           </Button>
           <Button onClick={() => navigate({ to: '/clerk/sign-in' })}>
-            <ClerkLogo className='invert' /> Sign in
+            <ClerkLogo className='invert' /> {t('clerk.userManagement.signIn')}
           </Button>
         </div>
         <div className='mt-4 h-8 text-center'>
@@ -163,11 +168,13 @@ function Unauthorized() {
             <>
               <p>
                 {countdown > 0
-                  ? `Redirecting to Sign In page in ${countdown}s`
-                  : `Redirecting...`}
+                  ? t('clerk.userManagement.redirectCountdown', {
+                      count: countdown,
+                    })
+                  : t('clerk.userManagement.redirectNow')}
               </p>
               <Button variant='link' onClick={() => setCancelled(true)}>
-                Cancel Redirect
+                {t('clerk.userManagement.cancelRedirect')}
               </Button>
             </>
           )}

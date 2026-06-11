@@ -1,5 +1,9 @@
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
+const axisColor = 'var(--muted-foreground)'
+const primarySeriesColor = 'var(--chart-1)'
+const secondarySeriesColor = 'var(--chart-2)'
+
 const data = [
   {
     name: 'Mon',
@@ -44,13 +48,13 @@ export function AnalyticsChart() {
       <AreaChart data={data}>
         <XAxis
           dataKey='name'
-          stroke='#888888'
+          stroke={axisColor}
           fontSize={12}
           tickLine={false}
           axisLine={false}
         />
         <YAxis
-          stroke='#888888'
+          stroke={axisColor}
           fontSize={12}
           tickLine={false}
           axisLine={false}
@@ -58,17 +62,15 @@ export function AnalyticsChart() {
         <Area
           type='monotone'
           dataKey='clicks'
-          stroke='currentColor'
-          className='text-primary'
-          fill='currentColor'
+          stroke={primarySeriesColor}
+          fill={primarySeriesColor}
           fillOpacity={0.15}
         />
         <Area
           type='monotone'
           dataKey='uniques'
-          stroke='currentColor'
-          className='text-muted-foreground'
-          fill='currentColor'
+          stroke={secondarySeriesColor}
+          fill={secondarySeriesColor}
           fillOpacity={0.1}
         />
       </AreaChart>

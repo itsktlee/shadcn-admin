@@ -2,6 +2,7 @@ import { clearCookies } from '@/test-utils/cookies'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { getCookie, setCookie } from '@/lib/cookies'
 import { DirectionProvider } from '@/context/direction-provider'
 import { LayoutProvider } from '@/context/layout-provider'
@@ -29,10 +30,10 @@ async function renderConfigDrawer({
 
 async function openDrawer(screen: RenderResult) {
   await userEvent.click(
-    screen.getByRole('button', { name: /^Open theme settings$/i })
+    screen.getByRole('button', { name: i18n.t('configDrawer.open') })
   )
   await expect
-    .element(screen.getByText(/^Theme Settings$/i))
+    .element(screen.getByText(i18n.t('configDrawer.title')))
     .toBeInTheDocument()
 }
 
@@ -51,20 +52,28 @@ describe('ConfigDrawer (integration)', () => {
 
     await openDrawer(screen)
 
-    const drawer = screen.getByRole('dialog', { name: /theme settings/i })
+    const drawer = screen.getByRole('dialog', {
+      name: i18n.t('configDrawer.title'),
+    })
 
     await expect.element(drawer).toBeInTheDocument()
 
-    await expect.element(drawer.getByText(/^Theme$/i)).toBeInTheDocument()
-    await expect.element(drawer.getByText(/^Layout$/i)).toBeInTheDocument()
     await expect
-      .element(drawer.getByText(/^Sidebar$/i).first())
+      .element(drawer.getByText(i18n.t('configDrawer.sections.theme')))
       .toBeInTheDocument()
-    await expect.element(drawer.getByText(/^Direction$/i)).toBeInTheDocument()
+    await expect
+      .element(drawer.getByText(i18n.t('configDrawer.sections.layout')))
+      .toBeInTheDocument()
+    await expect
+      .element(drawer.getByText(i18n.t('configDrawer.sections.sidebar')).first())
+      .toBeInTheDocument()
+    await expect
+      .element(drawer.getByText(i18n.t('configDrawer.sections.direction')))
+      .toBeInTheDocument()
     await expect
       .element(
         screen.getByRole('button', {
-          name: /reset all settings to default values/i,
+          name: i18n.t('configDrawer.resetAll'),
         })
       )
       .toBeInTheDocument()
@@ -75,7 +84,11 @@ describe('ConfigDrawer (integration)', () => {
       const screen = await renderConfigDrawer()
       await openDrawer(screen)
       await userEvent.click(
-        screen.getByRole('radio', { name: /select light/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('common.light'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(document.documentElement.classList.contains('light')).toBe(true)
@@ -86,7 +99,13 @@ describe('ConfigDrawer (integration)', () => {
     it('applies dark theme to <html> and cookie', async () => {
       const screen = await renderConfigDrawer()
       await openDrawer(screen)
-      await userEvent.click(screen.getByRole('radio', { name: /select dark/i }))
+      await userEvent.click(
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('common.dark'),
+          }),
+        })
+      )
       await vi.waitFor(() =>
         expect(document.documentElement.classList.contains('dark')).toBe(true)
       )
@@ -101,7 +120,11 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select system/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('common.system'),
+          }),
+        })
       )
       await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('system'))
       await vi.waitFor(() => {
@@ -119,7 +142,11 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select floating/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.sidebarFloating'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(getCookie('layout_variant')).toBe('floating')
@@ -131,7 +158,11 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /^select sidebar$/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.sidebarStandard'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(getCookie('layout_variant')).toBe('sidebar')
@@ -143,14 +174,22 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select floating/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.sidebarFloating'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(getCookie('layout_variant')).toBe('floating')
       )
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select inset/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.sidebarInset'),
+          }),
+        })
       )
       await vi.waitFor(() => expect(getCookie('layout_variant')).toBe('inset'))
     })
@@ -161,7 +200,11 @@ describe('ConfigDrawer (integration)', () => {
     await openDrawer(screen)
 
     await userEvent.click(
-      screen.getByRole('radio', { name: /select full layout/i })
+      screen.getByRole('radio', {
+        name: i18n.t('configDrawer.aria.selectOption', {
+          label: i18n.t('configDrawer.options.layoutFull'),
+        }),
+      })
     )
     await vi.waitFor(() =>
       expect(getCookie('layout_collapsible')).toBe('offcanvas')
@@ -174,12 +217,18 @@ describe('ConfigDrawer (integration)', () => {
       const screen = await renderConfigDrawer()
       await openDrawer(screen)
 
-      await userEvent.click(screen.getByRole('radio', { name: /select dark/i }))
+      await userEvent.click(
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('common.dark'),
+          }),
+        })
+      )
       await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('dark'))
 
       await userEvent.click(
         screen.getByRole('button', {
-          name: /reset theme preference to default/i,
+          name: i18n.t('configDrawer.aria.resetTheme'),
         })
       )
       await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('system'))
@@ -190,7 +239,11 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select right to left/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.rtl'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(document.documentElement.getAttribute('dir')).toBe('rtl')
@@ -198,7 +251,7 @@ describe('ConfigDrawer (integration)', () => {
 
       await userEvent.click(
         screen.getByRole('button', {
-          name: /reset text direction to default/i,
+          name: i18n.t('configDrawer.aria.resetDirection'),
         })
       )
       await vi.waitFor(() =>
@@ -212,7 +265,11 @@ describe('ConfigDrawer (integration)', () => {
       await openDrawer(screen)
 
       await userEvent.click(
-        screen.getByRole('radio', { name: /select floating/i })
+        screen.getByRole('radio', {
+          name: i18n.t('configDrawer.aria.selectOption', {
+            label: i18n.t('configDrawer.options.sidebarFloating'),
+          }),
+        })
       )
       await vi.waitFor(() =>
         expect(getCookie('layout_variant')).toBe('floating')

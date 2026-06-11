@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,8 @@ import {
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
-  entityName: string
+  entityLabel: string
+  entityLabelPlural?: string
   children: React.ReactNode
 }
 
@@ -29,18 +31,25 @@ type DataTableBulkActionsProps<TData> = {
  */
 export function DataTableBulkActions<TData>({
   table,
-  entityName,
+  entityLabel,
+  entityLabelPlural,
   children,
 }: DataTableBulkActionsProps<TData>): React.ReactNode | null {
+  const { t } = useTranslation()
   const selectedRows = table.getFilteredSelectedRowModel().rows
   const selectedCount = selectedRows.length
   const toolbarRef = useRef<HTMLDivElement>(null)
   const [announcement, setAnnouncement] = useState('')
+  const selectedEntityLabel =
+    selectedCount > 1 ? entityLabelPlural ?? entityLabel : entityLabel
 
   // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
+      const message = t('dataTable.bulkActionsAvailable', {
+        count: selectedCount,
+        entityLabel: selectedEntityLabel,
+      })
 
       // Use queueMicrotask to defer state update and avoid cascading renders
       queueMicrotask(() => {
@@ -51,7 +60,7 @@ export function DataTableBulkActions<TData>({
       const timer = setTimeout(() => setAnnouncement(''), 3000)
       return () => clearTimeout(timer)
     }
-  }, [selectedCount, entityName])
+  }, [selectedCount, selectedEntityLabel, t])
 
   const handleClearSelection = () => {
     table.resetRowSelection()
@@ -138,7 +147,10 @@ export function DataTableBulkActions<TData>({
       <div
         ref={toolbarRef}
         role='toolbar'
-        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
+        aria-label={t('dataTable.bulkActionsLabel', {
+          count: selectedCount,
+          entityLabel: selectedEntityLabel,
+        })}
         aria-describedby='bulk-actions-description'
         tabIndex={-1}
         onKeyDown={handleKeyDown}
@@ -163,15 +175,15 @@ export function DataTableBulkActions<TData>({
                 size='icon'
                 onClick={handleClearSelection}
                 className='size-6 rounded-full'
-                aria-label='Clear selection'
-                title='Clear selection (Escape)'
+                aria-label={t('dataTable.clearSelection')}
+                title={t('dataTable.clearSelectionWithShortcut')}
               >
                 <X />
-                <span className='sr-only'>Clear selection</span>
+                <span className='sr-only'>{t('dataTable.clearSelection')}</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Clear selection (Escape)</p>
+              <p>{t('dataTable.clearSelectionWithShortcut')}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -188,15 +200,18 @@ export function DataTableBulkActions<TData>({
             <Badge
               variant='default'
               className='min-w-8 rounded-lg'
-              aria-label={`${selectedCount} selected`}
+              aria-label={t('dataTable.selectedCount', {
+                count: selectedCount,
+              })}
             >
               {selectedCount}
             </Badge>{' '}
             <span className='hidden sm:inline'>
-              {entityName}
-              {selectedCount > 1 ? 's' : ''}
-            </span>{' '}
-            selected
+              {t('dataTable.selectedSummary', {
+                count: selectedCount,
+                entityLabel: selectedEntityLabel,
+              })}
+            </span>
           </div>
 
           <Separator

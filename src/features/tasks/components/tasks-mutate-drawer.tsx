@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,6 +24,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { SelectDropdown } from '@/components/select-dropdown'
+import { labels, priorities, statuses } from '../data/data'
 import { type Task } from '../data/schema'
 
 type TaskMutateDrawerProps = {
@@ -31,20 +33,28 @@ type TaskMutateDrawerProps = {
   currentRow?: Task
 }
 
-const formSchema = z.object({
-  title: z.string().min(1, 'Title is required.'),
-  status: z.string().min(1, 'Please select a status.'),
-  label: z.string().min(1, 'Please select a label.'),
-  priority: z.string().min(1, 'Please choose a priority.'),
-})
-type TaskForm = z.infer<typeof formSchema>
+function createTaskFormSchema(t: (key: string) => string) {
+  return z.object({
+    title: z.string().min(1, t('tasks.mutateDrawer.validation.titleRequired')),
+    status: z
+      .string()
+      .min(1, t('tasks.mutateDrawer.validation.statusRequired')),
+    label: z.string().min(1, t('tasks.mutateDrawer.validation.labelRequired')),
+    priority: z
+      .string()
+      .min(1, t('tasks.mutateDrawer.validation.priorityRequired')),
+  })
+}
 
 export function TasksMutateDrawer({
   open,
   onOpenChange,
   currentRow,
 }: TaskMutateDrawerProps) {
+  const { t } = useTranslation()
   const isUpdate = !!currentRow
+  const formSchema = createTaskFormSchema(t)
+  type TaskForm = z.infer<typeof formSchema>
 
   const form = useForm<TaskForm>({
     resolver: zodResolver(formSchema),
@@ -73,12 +83,16 @@ export function TasksMutateDrawer({
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-start'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
+          <SheetTitle>
+            {isUpdate
+              ? t('tasks.mutateDrawer.updateTitle')
+              : t('tasks.mutateDrawer.createTitle')}
+          </SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info.'
-              : 'Add a new task by providing necessary info.'}
-            Click save when you&apos;re done.
+              ? t('tasks.mutateDrawer.updateDesc')
+              : t('tasks.mutateDrawer.createDesc')}{' '}
+            {t('tasks.mutateDrawer.saveHint')}
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
@@ -92,9 +106,12 @@ export function TasksMutateDrawer({
               name='title'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t('tasks.actions.columns.title')}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter a title' />
+                    <Input
+                      {...field}
+                      placeholder={t('tasks.mutateDrawer.titlePlaceholder')}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,18 +122,15 @@ export function TasksMutateDrawer({
               name='status'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t('tasks.actions.columns.status')}</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Select dropdown'
-                    items={[
-                      { label: 'In Progress', value: 'in progress' },
-                      { label: 'Backlog', value: 'backlog' },
-                      { label: 'Todo', value: 'todo' },
-                      { label: 'Canceled', value: 'canceled' },
-                      { label: 'Done', value: 'done' },
-                    ]}
+                    placeholder={t('tasks.mutateDrawer.statusPlaceholder')}
+                    items={statuses.map(({ labelKey, value }) => ({
+                      label: t(labelKey),
+                      value,
+                    }))}
                   />
                   <FormMessage />
                 </FormItem>
@@ -127,33 +141,26 @@ export function TasksMutateDrawer({
               name='label'
               render={({ field }) => (
                 <FormItem className='relative'>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>{t('common.label')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className='flex flex-col space-y-1'
                     >
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='documentation' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>
-                          Documentation
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='feature' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Feature</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='bug' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Bug</FormLabel>
-                      </FormItem>
+                      {labels.map((label) => (
+                        <FormItem
+                          key={label.value}
+                          className='flex items-center'
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={label.value} />
+                          </FormControl>
+                          <FormLabel className='font-normal'>
+                            {t(label.labelKey)}
+                          </FormLabel>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -165,31 +172,33 @@ export function TasksMutateDrawer({
               name='priority'
               render={({ field }) => (
                 <FormItem className='relative'>
-                  <FormLabel>Priority</FormLabel>
+                  <FormLabel>{t('tasks.actions.columns.priority')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className='flex flex-col space-y-1'
                     >
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='high' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>High</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='medium' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Medium</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center'>
-                        <FormControl>
-                          <RadioGroupItem value='low' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Low</FormLabel>
-                      </FormItem>
+                      {priorities
+                        .filter(
+                          (priority) =>
+                            priority.value === 'high' ||
+                            priority.value === 'medium' ||
+                            priority.value === 'low'
+                        )
+                        .map((priority) => (
+                          <FormItem
+                            key={priority.value}
+                            className='flex items-center'
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={priority.value} />
+                            </FormControl>
+                            <FormLabel className='font-normal'>
+                              {t(priority.labelKey)}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -200,10 +209,10 @@ export function TasksMutateDrawer({
         </Form>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>Close</Button>
+            <Button variant='outline'>{t('common.close')}</Button>
           </SheetClose>
           <Button form='tasks-form' type='submit'>
-            Save changes
+            {t('tasks.mutateDrawer.saveChanges')}
           </Button>
         </SheetFooter>
       </SheetContent>

@@ -14,6 +14,7 @@ import { TeamSwitcher } from './team-switcher'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
@@ -25,7 +26,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
-          <NavGroup key={props.title} {...props} />
+          <NavGroup key={props.titleKey ?? props.title} {...props} />
         ))}
       </SidebarContent>
       <SidebarFooter>

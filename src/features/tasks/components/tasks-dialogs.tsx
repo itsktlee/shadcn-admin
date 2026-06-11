@@ -3,8 +3,10 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { TasksImportDialog } from './tasks-import-dialog'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
 import { useTasks } from './tasks-provider'
+import { useTranslation } from 'react-i18next'
 
 export function TasksDialogs() {
+  const { t } = useTranslation()
   const { open, setOpen, currentRow, setCurrentRow } = useTasks()
   return (
     <>
@@ -51,19 +53,21 @@ export function TasksDialogs() {
               }, 500)
               showSubmittedData(
                 currentRow,
-                'The following task has been deleted:'
+                t('tasks.dialogs.deleteSingle.deletedValuesTitle')
               )
             }}
             className='max-w-md'
-            title={`Delete this task: ${currentRow.id} ?`}
+            title={t('tasks.dialogs.deleteSingle.title', {
+              id: currentRow.id,
+            })}
             desc={
               <>
-                You are about to delete a task with the ID{' '}
+                {t('tasks.dialogs.deleteSingle.descPrefix')}{' '}
                 <strong>{currentRow.id}</strong>. <br />
-                This action cannot be undone.
+                {t('tasks.dialogs.deleteSingle.descSuffix')}
               </>
             }
-            confirmText='Delete'
+            confirmText={t('common.delete')}
           />
         </>
       )}

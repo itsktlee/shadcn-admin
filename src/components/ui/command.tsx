@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
+import i18n from '@/i18n'
 import { cn } from '@/lib/utils'
 import {
   Dialog,
@@ -27,8 +28,8 @@ function Command({
 }
 
 function CommandDialog({
-  title = 'Command Palette',
-  description = 'Search for a command to run...',
+  title = i18n.t('searchDialog.title'),
+  description = i18n.t('searchDialog.description'),
   children,
   className,
   showCloseButton = true,

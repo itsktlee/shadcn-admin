@@ -12,6 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -35,6 +36,7 @@ type DataTableProps = {
 }
 
 export function TasksTable({ data }: DataTableProps) {
+  const { t } = useTranslation()
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -113,17 +115,25 @@ export function TasksTable({ data }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by title or ID...'
+        searchPlaceholder={t('tasks.filterPlaceholder')}
         filters={[
           {
             columnId: 'status',
-            title: 'Status',
-            options: statuses,
+            title: t('tasks.actions.columns.status'),
+            options: statuses.map((status) => ({
+              value: status.value,
+              icon: status.icon,
+              label: t(status.labelKey),
+            })),
           },
           {
             columnId: 'priority',
-            title: 'Priority',
-            options: priorities,
+            title: t('tasks.actions.columns.priority'),
+            options: priorities.map((priority) => ({
+              value: priority.value,
+              icon: priority.icon,
+              label: t(priority.labelKey),
+            })),
           },
         ]}
       />
@@ -183,7 +193,7 @@ export function TasksTable({ data }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  {t('dataTable.noResults')}
                 </TableCell>
               </TableRow>
             )}

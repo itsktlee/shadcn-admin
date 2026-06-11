@@ -1,4 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import i18n from '@/i18n'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -16,7 +17,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
           (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
+        aria-label={i18n.t('common.selectAll')}
         className='translate-y-0.5'
       />
     ),
@@ -24,7 +25,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
+        aria-label={i18n.t('common.selectRow')}
         className='translate-y-0.5'
       />
     ),
@@ -34,7 +35,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Task' />
+      <DataTableColumnHeader
+        column={column}
+        title={i18n.t('tasks.actions.columns.task')}
+      />
     ),
     cell: ({ row }) => <div className='w-20'>{row.getValue('id')}</div>,
     enableSorting: false,
@@ -43,7 +47,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Title' />
+      <DataTableColumnHeader
+        column={column}
+        title={i18n.t('tasks.actions.columns.title')}
+      />
     ),
     meta: {
       className: 'ps-1 max-w-0 w-2/3',
@@ -54,7 +61,11 @@ export const tasksColumns: ColumnDef<Task>[] = [
 
       return (
         <div className='flex space-x-2'>
-          {label && <Badge variant='outline'>{label.label}</Badge>}
+          {label && (
+            <Badge variant='outline'>
+              {i18n.t(label.labelKey)}
+            </Badge>
+          )}
           <span className='truncate font-medium'>{row.getValue('title')}</span>
         </div>
       )
@@ -63,7 +74,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader
+        column={column}
+        title={i18n.t('tasks.actions.columns.status')}
+      />
     ),
     meta: { className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => {
@@ -80,7 +94,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
           {status.icon && (
             <status.icon className='size-4 text-muted-foreground' />
           )}
-          <span>{status.label}</span>
+          <span>{i18n.t(status.labelKey)}</span>
         </div>
       )
     },
@@ -91,7 +105,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'priority',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Priority' />
+      <DataTableColumnHeader
+        column={column}
+        title={i18n.t('tasks.actions.columns.priority')}
+      />
     ),
     meta: { className: 'ps-1', tdClassName: 'ps-3' },
     cell: ({ row }) => {
@@ -108,7 +125,9 @@ export const tasksColumns: ColumnDef<Task>[] = [
           {priority.icon && (
             <priority.icon className='size-4 text-muted-foreground' />
           )}
-          <span>{priority.label}</span>
+          <span>
+            {i18n.t(priority.labelKey)}
+          </span>
         </div>
       )
     },
