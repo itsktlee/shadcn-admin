@@ -25,25 +25,25 @@ export function Dashboard() {
   const topNav = [
     {
       title: t('dashboard.tabs.overview'),
-      href: 'dashboard/overview',
+      href: '/',
       isActive: true,
       disabled: false,
     },
     {
       title: t('dashboard.tabs.customers'),
-      href: 'dashboard/customers',
+      href: '/',
       isActive: false,
       disabled: true,
     },
     {
       title: t('dashboard.tabs.products'),
-      href: 'dashboard/products',
+      href: '/',
       isActive: false,
       disabled: true,
     },
     {
       title: t('common.settings'),
-      href: 'dashboard/settings',
+      href: '/',
       isActive: false,
       disabled: true,
     },
@@ -63,11 +63,11 @@ export function Dashboard() {
 
       {/* ===== Main ===== */}
       <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
+        <div className='mb-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between'>
           <h1 className='text-2xl font-bold tracking-tight'>
             {t('dashboard.title')}
           </h1>
-          <div className='flex items-center space-x-2'>
+          <div className='flex w-full items-center space-x-2 sm:w-auto'>
             <Button>{t('dashboard.download')}</Button>
           </div>
         </div>

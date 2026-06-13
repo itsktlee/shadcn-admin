@@ -1,119 +1,166 @@
-# Shadcn Admin Dashboard
+# Shadcn Admin Next.js Template
 
-Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
+基于 `satnaing/shadcn-admin` 视觉壳重建的 `Next.js App Router` 母模板。当前仓库已经不再是原始的 `Vite + TanStack Router` 版本，而是面向长期复用的 `Next.js` 模板壳。
 
-![alt text](public/images/shadcn-admin.png)
+![Shadcn Admin](public/images/shadcn-admin.png)
 
-[![Sponsored by Clerk](https://img.shields.io/badge/Sponsored%20by-Clerk-5b6ee1?logo=clerk)](https://go.clerk.com/GttUAaK)
+## 当前模板定位
 
-I've been creating dashboard UIs at work and for my personal projects. I always wanted to make a reusable collection of dashboard UI for future projects; and here it is now. While I've created a few custom components, some of the code is directly adapted from ShadcnUI examples.
+这个仓库现在提供的是一套可复用的后台母模板，重点在：
 
-> This is not a starter project (template) though. I'll probably make one in the future.
+- 保留原项目的整体壳层风格与交互结构
+- 切到 `Next.js App Router`
+- 保留浅色 / 深色模式
+- 接入模板级 `i18next`
+- 提供动作级权限基线
+- 提供一个可关闭的 `Reference Module` 参考实现
+- 提供最小自动回归测试基线
 
-## Features
+## 当前技术栈
 
-- Light/dark mode
-- Responsive
-- Accessible
-- With built-in Sidebar component
-- Global search command
-- 10+ pages
-- Extra custom components
-- RTL support
+- `Next.js 15`
+- `React 19`
+- `TypeScript`
+- `Shadcn UI + Radix UI`
+- `Tailwind CSS v4`
+- `TanStack Query`
+- `i18next`
+- `Vitest Browser Mode`
 
-<details>
-<summary>Customized Components (click to expand)</summary>
+## 模板能力
 
-This project uses Shadcn UI components, but some have been slightly modified for better RTL (Right-to-Left) support and other improvements. These customized components differ from the original Shadcn UI versions.
+- Dashboard Shell
+- Sidebar / Header / Command Menu
+- 中英双语切换
+- 亮色 / 暗色 / 系统主题
+- Mock Auth Session 基线
+- 认证页展示逻辑基线
+- 动作级权限裁剪
+- `resources` 参考列表 + CRUD 模块
+- 模板级 `Reference Module` 启停开关
 
-If you want to update components using the Shadcn CLI (e.g., `npx shadcn@latest add <component>`), it's generally safe for non-customized components. For the listed customized ones, you may need to manually merge changes to preserve the project's modifications and avoid overwriting RTL support or other updates.
+## 目录锚点
 
-> If you don't require RTL support, you can safely update the 'RTL Updated Components' via the Shadcn CLI, as these changes are primarily for RTL compatibility. The 'Modified Components' may have other customizations to consider.
+- `app/`
+  - Next.js App Router 入口
+- `src/features/`
+  - feature-first 模块
+- `src/modules/`
+  - 模块注册与导航解析
+- `src/contracts/`
+  - 共享契约 / schema
+- `src/services/`
+  - auth / adapter / query 等服务层
+- `src/providers/`
+  - theme / i18n / auth / query provider
+- `docs/specs/`
+  - 蓝图、实施 checkpoint、交付审计记录
 
-### Modified Components
+## 本地运行
 
-- scroll-area
-- sonner
-- separator
-
-### RTL Updated Components
-
-- alert-dialog
-- calendar
-- command
-- dialog
-- dropdown-menu
-- select
-- table
-- sheet
-- sidebar
-- switch
-
-**Notes:**
-
-- **Modified Components**: These have general updates, potentially including RTL adjustments.
-- **RTL Updated Components**: These have specific changes for RTL language support (e.g., layout, positioning).
-- For implementation details, check the source files in `src/components/ui/`.
-- All other Shadcn UI components in the project are standard and can be safely updated via the CLI.
-
-</details>
-
-## Tech Stack
-
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
-
-**Build Tool:** [Vite](https://vitejs.dev/)
-
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)
-
-**Type Checking:** [TypeScript](https://www.typescriptlang.org/)
-
-**Linting/Formatting:** [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)
-
-**Icons:** [Lucide Icons](https://lucide.dev/icons/), [Tabler Icons](https://tabler.io/icons) (Brand icons only)
-
-**Auth (partial):** [Clerk](https://go.clerk.com/GttUAaK)
-
-## Run Locally
-
-Clone the project
+安装依赖：
 
 ```bash
-  git clone https://github.com/satnaing/shadcn-admin.git
+pnpm install
 ```
 
-Go to the project directory
+启动开发环境：
 
 ```bash
-  cd shadcn-admin
+pnpm dev
 ```
 
-Install dependencies
+说明：
+
+- `pnpm dev` 是当前正式的 `Next.js App Router` 开发入口
+- 仓库里保留的 `index.html + src/main.tsx + src/routes/**` 仅作为 legacy 迁移参考面，不是当前模板主运行链
+
+## Mock Auth 规则
+
+当前模板默认内置一层 mock auth，便于直接验收壳层、权限和表单流程。
+
+- 登录页不是固定演示账号模式
+- 任意合法邮箱 + 至少 7 位密码都可以登录
+- 权限档位由邮箱前缀决定：
+  - `viewer@...` 或 `xxx+viewer@...` -> viewer
+  - `operator@...` 或 `xxx+operator@...` -> operator
+  - 其他邮箱 -> admin
+
+示例：
+
+- `admin@template.dev / 1234567`
+- `viewer@template.dev / 1234567`
+- `operator@template.dev / 1234567`
+
+另外，`/sign-in`、`/sign-in-2`、`/sign-up`、`/forgot-password`、`/otp` 这些认证页在当前模板里同时承担 `showcase` 作用，所以即使已经登录，也仍然可以继续访问查看页面样式。
+
+## 测试脚本
+
+默认浏览器测试：
 
 ```bash
-  pnpm install
+pnpm test
 ```
 
-Start the server
+显式使用本机 Chrome：
 
 ```bash
-  pnpm run dev
+pnpm run test:browser:chrome
 ```
 
-## Sponsoring this project ❤️
+显式使用本机 Edge：
 
-If you find this project helpful or use this in your own work, consider [sponsoring me](https://github.com/sponsors/satnaing) to support development and maintenance. You can [buy me a coffee](https://buymeacoffee.com/satnaing) as well. Don’t worry, every penny helps. Thank you! 🙏
+```bash
+pnpm run test:browser:edge
+```
 
-For questions or sponsorship inquiries, feel free to reach out at [satnaingdev@gmail.com](mailto:satnaingdev@gmail.com).
+如果你确实要跑 legacy `src/routes/**` 相关测试，再显式回开文件路由插件：
 
-### Current Sponsor
+```bash
+VITEST_ENABLE_TANSTACK_ROUTER_PLUGIN=true pnpm test
+```
 
-- [Clerk](https://go.clerk.com/GttUAaK) - authentication and user management for the modern web
+说明：
 
-## Author
+- 当前模板已经调整为优先复用本机默认浏览器
+- 若默认浏览器是 Chrome / Edge，会优先走系统已安装浏览器
+- 不再默认依赖 Playwright 自带 Chromium 二进制
+- 当前 `Vitest` 默认不再自动启用 legacy `TanStack Router` 文件路由插件；只有测试旧 `src/routes/**` 面时才建议显式回开
 
-Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
+## 参考模块开关
+
+当前模板提供一个 `resources` 参考模块，默认开启。
+
+如果你接手模板做真实业务，想先关掉它，可设置：
+
+```bash
+NEXT_PUBLIC_TEMPLATE_MODULE_RESOURCES=false
+```
+
+关闭后：
+
+- sidebar / command menu 不再注册 `resources`
+- `/resources` 路由会直接 `notFound`
+- middleware 不再把 `/resources` 视为模板主入口
+
+## 模板接管建议
+
+推荐接管顺序：
+
+1. 先替换 sidebar 导航里的业务模块
+2. 再替换 `resources` 参考模块为真实业务模块
+3. 最后替换 mock auth / mock adapter
+
+不建议一开始就把壳层、权限、i18n、数据契约一起推倒重来。
+
+## 深入文档
+
+- [模板蓝图](./docs/specs/2026-06-12_10-15_nextjs-shell-template-blueprint.md)
+- [实施清单](./docs/specs/2026-06-12_11-05_nextjs-shell-template-implementation-checklist.md)
+- [模板使用指南](./docs/template-adoption-guide.md)
+- [Legacy 清理清单](./docs/template-legacy-removal-checklist.md)
+- [模板运行时配置](./docs/template-runtime-config.md)
 
 ## License
 
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+沿用原项目许可证，详见仓库内 license 文件。

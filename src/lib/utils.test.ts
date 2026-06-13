@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getPageNumbers } from './utils'
+import { getDisplayNameInitials, getPageNumbers } from './utils'
 
 describe('getPageNumbers', () => {
   it('returns all pages when total is at most 5', () => {
@@ -24,5 +24,20 @@ describe('getPageNumbers', () => {
   it('handles current page greater than total pages', () => {
     expect(getPageNumbers(6, 5)).toEqual([1, 2, 3, 4, 5])
     expect(getPageNumbers(11, 10)).toEqual([1, '...', 7, 8, 9, 10])
+  })
+})
+
+describe('getDisplayNameInitials', () => {
+  it('returns the first two letters for a single-word name', () => {
+    expect(getDisplayNameInitials('Template')).toBe('TE')
+  })
+
+  it('returns the first and last initials for multi-word names', () => {
+    expect(getDisplayNameInitials('Template Admin')).toBe('TA')
+    expect(getDisplayNameInitials('  Jane   Doe  ')).toBe('JD')
+  })
+
+  it('returns a fallback marker for empty names', () => {
+    expect(getDisplayNameInitials('   ')).toBe('?')
   })
 })

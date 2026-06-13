@@ -1,3 +1,5 @@
+'use client'
+
 import { type SVGProps } from 'react'
 import { Root as Radio, Item } from '@radix-ui/react-radio-group'
 import { CircleCheck, RotateCcw, Settings } from 'lucide-react'
@@ -13,9 +15,12 @@ import { IconThemeDark } from '@/assets/custom/icon-theme-dark'
 import { IconThemeLight } from '@/assets/custom/icon-theme-light'
 import { IconThemeSystem } from '@/assets/custom/icon-theme-system'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/context/direction-provider'
-import { type Collapsible, useLayout } from '@/context/layout-provider'
-import { useTheme } from '@/context/theme-provider'
+import { useDirection } from '@/providers/direction-provider'
+import {
+  type DashboardCollapsible as Collapsible,
+  useDashboardLayout,
+} from '@/providers/dashboard-layout-provider'
+import { useTheme } from '@/providers/theme-provider'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -32,7 +37,7 @@ export function ConfigDrawer() {
   const { setOpen } = useSidebar()
   const { resetDir } = useDirection()
   const { resetTheme } = useTheme()
-  const { resetLayout } = useLayout()
+  const { resetLayout } = useDashboardLayout()
   const { t } = useTranslation()
 
   const handleReset = () => {
@@ -226,7 +231,7 @@ function ThemeConfig() {
 }
 
 function SidebarConfig() {
-  const { defaultVariant, variant, setVariant } = useLayout()
+  const { defaultVariant, variant, setVariant } = useDashboardLayout()
   const { t } = useTranslation()
 
   return (
@@ -276,7 +281,8 @@ function SidebarConfig() {
 
 function LayoutConfig() {
   const { open, setOpen } = useSidebar()
-  const { defaultCollapsible, collapsible, setCollapsible } = useLayout()
+  const { defaultCollapsible, collapsible, setCollapsible } =
+    useDashboardLayout()
   const { t } = useTranslation()
 
   const radioState = open ? 'default' : collapsible

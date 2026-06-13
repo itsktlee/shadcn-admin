@@ -1,4 +1,6 @@
-import { Outlet } from '@tanstack/react-router'
+'use client'
+
+import type { ReactNode } from 'react'
 import { Monitor, Bell, Languages, Palette, Wrench, UserCog } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Separator } from '@/components/ui/separator'
@@ -11,7 +13,7 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { SidebarNav } from './components/sidebar-nav'
 
-export function Settings() {
+export function Settings({ children }: { children: ReactNode }) {
   const { t } = useTranslation()
   const sidebarNavItems = [
     {
@@ -70,7 +72,7 @@ export function Settings() {
             <SidebarNav items={sidebarNavItems} />
           </aside>
           <div className='flex w-full overflow-y-hidden p-1'>
-            <Outlet />
+            {children}
           </div>
         </div>
       </Main>

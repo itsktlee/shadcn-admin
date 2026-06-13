@@ -1,42 +1,11 @@
-import { type LinkProps } from '@tanstack/react-router'
-
-type User = {
-  name: string
-  email: string
-  avatar: string
-}
-
-type Team = {
-  name: string
-  logo: React.ElementType
-  plan: string
-  planKey?: string
-}
-
-type BaseNavItem = {
-  title: string
-  titleKey?: string
-  badge?: string
-  icon?: React.ElementType
-}
-
-type NavLink = BaseNavItem & {
-  url: LinkProps['to'] | (string & {})
-  items?: never
-}
-
-type NavCollapsible = BaseNavItem & {
-  items: (BaseNavItem & { url: LinkProps['to'] | (string & {}) })[]
-  url?: never
-}
-
-type NavItem = NavCollapsible | NavLink
-
-type NavGroup = {
-  title: string
-  titleKey?: string
-  items: NavItem[]
-}
+import type {
+  ResolvedNavCollapsible as NavCollapsible,
+  ResolvedNavGroup as NavGroup,
+  ResolvedNavItem as NavItem,
+  ResolvedNavLink as NavLink,
+  ShellTeam as Team,
+  ShellUser as User,
+} from '@/modules/types'
 
 type SidebarData = {
   user: User

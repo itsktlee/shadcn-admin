@@ -1,5 +1,8 @@
-import { useState, type JSX } from 'react'
-import { useLocation, useNavigate, Link } from '@tanstack/react-router'
+'use client'
+
+import { type JSX } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
@@ -21,20 +24,18 @@ type SidebarNavProps = React.HTMLAttributes<HTMLElement> & {
 }
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const [val, setVal] = useState(pathname ?? '/settings')
+  const pathname = usePathname()
+  const router = useRouter()
   const { t } = useTranslation()
 
   const handleSelect = (e: string) => {
-    setVal(e)
-    navigate({ to: e })
+    router.push(e)
   }
 
   return (
     <>
       <div className='p-1 md:hidden'>
-        <Select value={val} onValueChange={handleSelect}>
+        <Select value={pathname ?? '/settings'} onValueChange={handleSelect}>
           <SelectTrigger className='h-12 sm:w-48'>
             <SelectValue placeholder={t('settings.mobileSelectPlaceholder')} />
           </SelectTrigger>
@@ -66,7 +67,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           {items.map((item) => (
             <Link
               key={item.href}
-              to={item.href}
+              href={item.href}
               className={cn(
                 buttonVariants({ variant: 'ghost' }),
                 pathname === item.href

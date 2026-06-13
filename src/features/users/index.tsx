@@ -1,5 +1,5 @@
-import { getRouteApi } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { useLegacySearchState } from '@/hooks/use-legacy-search-state'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { LanguageSwitch } from '@/components/language-switch'
@@ -13,12 +13,13 @@ import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
 import { users } from './data/users'
 
-const route = getRouteApi('/_authenticated/users/')
-
 export function Users() {
   const { t } = useTranslation()
-  const search = route.useSearch()
-  const navigate = route.useNavigate()
+  const { search, navigate } = useLegacySearchState({
+    stringKeys: ['username'],
+    numberKeys: ['page', 'pageSize'],
+    arrayKeys: ['status', 'role'],
+  })
 
   return (
     <UsersProvider>

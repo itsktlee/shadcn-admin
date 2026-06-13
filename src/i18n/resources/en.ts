@@ -38,15 +38,31 @@ export const en = {
     file: 'File',
     label: 'Label',
   },
+  permissions: {
+    denied: {
+      title: 'Access restricted',
+      description:
+        'Your current permission set does not allow this action: {{action}}.',
+      defaultAction: 'requested operation',
+      backHome: 'Back to dashboard',
+    },
+  },
   dataTable: {
     noResults: 'No results.',
     reset: 'Reset',
     view: 'View',
     toggleColumns: 'Toggle columns',
+    rowsPerPage: 'Rows per page',
+    pageStatus: 'Page {{current}} of {{total}}',
     sortAsc: 'Asc',
     sortDesc: 'Desc',
     hide: 'Hide',
     clearFilters: 'Clear filters',
+    goToFirstPage: 'Go to first page',
+    goToPreviousPage: 'Go to previous page',
+    goToPage: 'Go to page {{page}}',
+    goToNextPage: 'Go to next page',
+    goToLastPage: 'Go to last page',
     selectedCount: '{{count}} selected',
     selectedSummary: '{{count}} {{entityLabel}} selected',
     bulkActionsAvailable:
@@ -58,6 +74,162 @@ export const en = {
   feedback: {
     submittedValues: 'You submitted the following values:',
   },
+  foundation: {
+    badge: 'M1 Foundation',
+    title: 'Next.js shell foundation is ready for shell migration.',
+    description:
+      'This page only verifies the global bootstraps: theme, language, direction, font, query, and toast.',
+    preview: 'Current bootstrap state',
+    theme: 'Theme',
+    language: 'Language',
+    direction: 'Direction',
+    font: 'Font',
+    actions: {
+      toast: 'Show toast',
+    },
+  },
+  multishell: {
+    dashboard: {
+      badge: 'M2 Multi-shell',
+      title: 'Dashboard shell is now isolated from auth and error routes.',
+      description:
+        'This screen validates the dashboard-only shell boundary while keeping theme, language, direction, and font controls alive.',
+      preview: 'Current dashboard shell state',
+    },
+    shellParity: {
+      badge: 'M3 Shell Parity',
+      dashboardLead:
+        'The shared dashboard shell is now mounted with the original sidebar, top header actions, command menu, and settings sub-navigation.',
+      placeholderTitle: 'Route placeholder',
+      routeLabel: 'Route',
+      moduleDescription:
+        '{{title}} now renders inside the shared dashboard shell and is ready for later feature migration.',
+      moduleCardDescription:
+        'This page keeps the route reachable while the module body is migrated in later milestones.',
+      authRouteDescription:
+        'This auth route stays reachable in the dedicated auth shell while full form parity is deferred to later milestones.',
+      errorRouteDescription:
+        'This error route stays reachable in the dedicated error shell while detailed states are deferred to later milestones.',
+    },
+    auth: {
+      badge: 'Auth Shell',
+      title: 'Authentication routes now live in their own shell.',
+      description:
+        'This page only proves the auth shell boundary. Full auth UI parity will be migrated in the next milestone.',
+    },
+    errors: {
+      badge: 'Error Shell',
+      title: 'Error routes now render outside the dashboard shell.',
+      description:
+        'This page is a layout placeholder for the dedicated error shell. Full error flows stay in later milestones.',
+      backHome: 'Back to dashboard',
+    },
+  },
+  helpCenterPage: {
+    badge: 'Showcase',
+    eyebrow: 'Support-style module example',
+    title: 'Help Center',
+    description:
+      'Use this page as a neutral example for knowledge-base, onboarding, support, or internal operations content without treating it as a reference business module.',
+    openLink: 'Open',
+    quickLinks: {
+      adoption: {
+        title: 'Template adoption',
+        description:
+          'Start from the existing runtime and replace the shell, navigation, and business modules in a controlled order.',
+        href: '/settings/appearance',
+      },
+      navigation: {
+        title: 'Navigation replacement',
+        description:
+          'Use the current settings and resources routes as anchors while you replace the sidebar with real modules.',
+        href: '/settings',
+      },
+      permissions: {
+        title: 'Permission baseline',
+        description:
+          'Keep route access and action-level permissions aligned before wiring a real auth provider.',
+        href: '/resources',
+      },
+    },
+    faq: {
+      title: 'Common questions',
+      description: 'These prompts keep the template handoff path predictable.',
+      items: {
+        replaceShell: {
+          question:
+            'Where should I start when replacing the demo shell with my own modules?',
+          answer:
+            'Keep the shared dashboard shell, replace navigation manifests first, then migrate one real business module at a time.',
+        },
+        dataAdapters: {
+          question: 'How do I connect real APIs later?',
+          answer:
+            'Follow the resources module path: keep the feature UI, swap the adapter implementation, and leave the route and shell structure intact.',
+        },
+        themeAndLanguage: {
+          question:
+            'Should theme and language be handled before business work?',
+          answer:
+            'Yes. Treat them as template infrastructure so later modules inherit the same runtime behavior without rework.',
+        },
+      },
+    },
+    resources: {
+      title: 'Useful reference surfaces',
+      description:
+        'These pages are the fastest way to understand how the current template is expected to be taken over.',
+      items: {
+        runtime: {
+          title: 'Runtime configuration',
+          description:
+            'Check environment toggles, cookie keys, and browser runtime notes before connecting external services.',
+        },
+        settings: {
+          title: 'Settings module',
+          description:
+            'Use settings for form page structure, secondary navigation, and global preference handling.',
+        },
+        resources: {
+          title: 'Resources module',
+          description:
+            'Use resources for list, CRUD, query, adapter, and permission patterns.',
+        },
+      },
+    },
+  },
+  errorsShowcase: {
+    actions: {
+      goBack: 'Go Back',
+      backHome: 'Back to Home',
+    },
+    unauthorized: {
+      title: 'Unauthorized Access',
+      descriptionLineOne: 'Please sign in with the appropriate credentials',
+      descriptionLineTwo: 'before accessing this resource.',
+    },
+    forbidden: {
+      title: 'Access Forbidden',
+      descriptionLineOne: "You don't have the necessary permission",
+      descriptionLineTwo: 'to view this resource.',
+    },
+    notFound: {
+      title: 'Oops! Page Not Found!',
+      descriptionLineOne: "It seems like the page you're looking for",
+      descriptionLineTwo: 'does not exist or might have been removed.',
+    },
+    internalServerError: {
+      title: "Oops! Something went wrong :')",
+      descriptionLineOne: 'We apologize for the inconvenience.',
+      descriptionLineTwo: 'Please try again later.',
+    },
+    maintenance: {
+      title: 'Website is under maintenance!',
+      descriptionLineOne: 'The site is not available at the moment.',
+      descriptionLineTwo: "We'll be back online shortly.",
+      learnMore: 'Learn more',
+    },
+  },
   sidebar: {
     groups: {
       general: 'General',
@@ -66,14 +238,11 @@ export const en = {
     },
     nav: {
       dashboard: 'Dashboard',
+      resources: 'Resources',
       tasks: 'Tasks',
       apps: 'Apps',
       chats: 'Chats',
       users: 'Users',
-      clerk: 'Secured by Clerk',
-      clerkSignIn: 'Sign In',
-      clerkSignUp: 'Sign Up',
-      clerkUserManagement: 'User Management',
       auth: 'Auth',
       authSignIn: 'Sign In',
       authSignInTwoCol: 'Sign In (2 Col)',
@@ -236,8 +405,7 @@ export const en = {
       emailDescSuffix: '.',
       bio: 'Bio',
       bioPlaceholder: 'Tell us a little bit about yourself',
-      bioDesc:
-        'You can mention other users and organizations to link to them.',
+      bioDesc: 'You can mention other users and organizations to link to them.',
       urls: 'URLs',
       urlsDesc: 'Add links to your website, blog, or social media profiles.',
       addUrl: 'Add URL',
@@ -396,6 +564,104 @@ export const en = {
       descending: 'Descending',
     },
   },
+  resources: {
+    title: 'Resource Directory',
+    desc: 'Validate the template list-module path with shared contracts, registry-driven navigation, and query adapters.',
+    filterPlaceholder: 'Search by name, slug, or owner...',
+    actions: {
+      create: 'Create Resource',
+    },
+    entities: {
+      singular: 'resource',
+      plural: 'resources',
+    },
+    filters: {
+      status: 'Status',
+      category: 'Category',
+    },
+    columns: {
+      name: 'Resource',
+      status: 'Status',
+      category: 'Category',
+      owner: 'Owner',
+      tags: 'Tags',
+      updatedAt: 'Updated',
+    },
+    fields: {
+      slug: 'Slug',
+      description: 'Description',
+    },
+    states: {
+      loading: 'Loading resources...',
+      syncing: 'Syncing results...',
+      total: '{{count}} resources total',
+    },
+    rowActions: {
+      openMenu: 'Open resource actions menu',
+    },
+    bulkActions: {
+      updateStatus: 'Update status',
+      statusLoading: 'Updating resource status...',
+      statusSuccess: 'Updated {{count}} resources to "{{status}}".',
+      deleteSelected: 'Delete selected resources',
+      deleteTitle: 'Delete {{count}} resources',
+      deleteDesc:
+        'Are you sure you want to delete the selected resources? This action cannot be undone.',
+      deleteLoading: 'Deleting resources...',
+      deleteSuccess: 'Deleted {{count}} resources.',
+    },
+    dialogs: {
+      save: 'Save changes',
+      create: {
+        title: 'Create Resource',
+        desc: 'Fill in the core resource fields to create a new reference resource.',
+        loading: 'Creating resource...',
+        success: 'Resource created.',
+      },
+      update: {
+        title: 'Edit Resource',
+        desc: 'Update the current resource while keeping the shared contract and list view aligned.',
+        loading: 'Updating resource...',
+        success: 'Resource updated.',
+      },
+      delete: {
+        title: 'Delete Resource',
+        desc: 'Are you sure you want to delete "{{name}}" ({{slug}})? This action cannot be undone.',
+        loading: 'Deleting resource...',
+        success: 'Resource deleted.',
+      },
+      placeholders: {
+        name: 'e.g. Analytics Core',
+        slug: 'e.g. analytics-core',
+        owner: 'e.g. Platform Team',
+        category: 'Select category',
+        status: 'Select status',
+        tags: 'Separate multiple tags with commas',
+        description:
+          'Add purpose, boundaries, or usage notes for this resource.',
+      },
+    },
+    validation: {
+      nameRequired: 'Resource name is required.',
+      slugRequired: 'Slug is required.',
+      ownerRequired: 'Owner is required.',
+      categoryRequired: 'Category is required.',
+      statusRequired: 'Status is required.',
+    },
+    data: {
+      statuses: {
+        draft: 'Draft',
+        active: 'Active',
+        archived: 'Archived',
+      },
+      categories: {
+        operations: 'Operations',
+        analytics: 'Analytics',
+        workspace: 'Workspace',
+        infrastructure: 'Infrastructure',
+      },
+    },
+  },
   users: {
     title: 'User List',
     desc: 'Manage your users and their roles here.',
@@ -454,7 +720,8 @@ export const en = {
       inviteEmailPlaceholder: 'eg: john.doe@gmail.com',
       rolePlaceholder: 'Select a role',
       inviteNoteLabel: 'Description (optional)',
-      inviteNotePlaceholder: 'Add a personal note to your invitation (optional)',
+      inviteNotePlaceholder:
+        'Add a personal note to your invitation (optional)',
       inviteSubmit: 'Invite',
       actionAddTitle: 'Add New User',
       actionEditTitle: 'Edit User',
@@ -680,56 +947,6 @@ export const en = {
       errors: {
         codeLength: 'Please enter the 6-digit code.',
       },
-    },
-  },
-  clerk: {
-    authLayout: {
-      learnMore:
-        'Welcome to the example Clerk auth page.',
-      backToPrefix: 'Back to',
-      quote:
-        'Build a secure admin experience quickly, then replace the demo text with your own product voice.',
-      quoteAuthor: 'Template Demo',
-    },
-    route: {
-      missingKeyTitle: 'No Publishable Key Found!',
-      missingKeyDesc:
-        'You need to generate a publishable key from Clerk and put it inside the .env file.',
-      setupTitle: 'Set your Clerk API key',
-      stepOnePrefix: 'In the',
-      stepOneSuffix: 'Dashboard, navigate to the API keys page.',
-      stepTwo:
-        'In the Quick Copy section, copy your Clerk Publishable Key.',
-      stepThree: 'Rename .env.example to .env',
-      stepFour: 'Paste your key into your .env file.',
-      finalResult: 'The final result should resemble the following:',
-      optionalTitle: 'Clerk Integration is Optional',
-      optionalDescOne:
-        'The Clerk integration lives entirely inside src/routes/clerk. If you plan to use Clerk as your auth service, you might want to place ClerkProvider at the root route.',
-      optionalDescTwo:
-        "If you don't plan to use Clerk, you can safely remove this directory and the related @clerk/react dependency.",
-      optionalDescThree:
-        "This setup is modular by design and won't affect the rest of the application.",
-    },
-    userManagement: {
-      learnMoreUsers:
-        "This is the same as '/users'.",
-      learnMoreProfile:
-        'You can sign out or manage/delete your account via the User Profile menu in the top-right corner of the page.',
-      unauthorizedTitle: 'Unauthorized Access',
-      unauthorizedDescPrefix: 'You must be authenticated via',
-      unauthorizedDescSuffix: 'to access this resource.',
-      unauthorizedLearnMoreOne:
-        "This is the same as '/users'.",
-      unauthorizedLearnMoreTwo:
-        'You must first sign in using Clerk to access this route.',
-      unauthorizedLearnMoreThree:
-        "After signing in, you'll be able to sign out or delete your account via the User Profile dropdown on this page.",
-      goBack: 'Go Back',
-      signIn: 'Sign in',
-      redirectCountdown: 'Redirecting to Sign In page in {{count}}s',
-      redirectNow: 'Redirecting...',
-      cancelRedirect: 'Cancel Redirect',
     },
   },
 } as const

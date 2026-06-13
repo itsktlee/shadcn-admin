@@ -1,3 +1,5 @@
+'use client'
+
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
@@ -6,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { fonts } from '@/config/fonts'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
-import { useFont } from '@/context/font-provider'
-import { useTheme } from '@/context/theme-provider'
+import { useFont } from '@/providers/font-provider'
+import { useTheme } from '@/providers/theme-provider'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Form,

@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent } from 'vitest/browser'
 import i18n from '@/i18n'
-import { getCookie, setCookie } from '@/lib/cookies'
-import { DirectionProvider } from '@/context/direction-provider'
-import { LayoutProvider } from '@/context/layout-provider'
-import { ThemeProvider } from '@/context/theme-provider'
+import { getCookie, setCookie, THEME_COOKIE_NAME } from '@/lib/cookies'
+import { DirectionProvider } from '@/providers/direction-provider'
+import { DashboardLayoutProvider } from '@/providers/dashboard-layout-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from './config-drawer'
 
@@ -18,11 +18,11 @@ async function renderConfigDrawer({
   return await render(
     <DirectionProvider>
       <ThemeProvider>
-        <LayoutProvider>
+        <DashboardLayoutProvider>
           <SidebarProvider defaultOpen={sidebarDefaultOpen}>
             <ConfigDrawer />
           </SidebarProvider>
-        </LayoutProvider>
+        </DashboardLayoutProvider>
       </ThemeProvider>
     </DirectionProvider>
   )
@@ -93,7 +93,7 @@ describe('ConfigDrawer (integration)', () => {
       await vi.waitFor(() =>
         expect(document.documentElement.classList.contains('light')).toBe(true)
       )
-      expect(getCookie('vite-ui-theme')).toBe('light')
+      expect(getCookie(THEME_COOKIE_NAME)).toBe('light')
     })
 
     it('applies dark theme to <html> and cookie', async () => {
@@ -109,12 +109,12 @@ describe('ConfigDrawer (integration)', () => {
       await vi.waitFor(() =>
         expect(document.documentElement.classList.contains('dark')).toBe(true)
       )
-      expect(getCookie('vite-ui-theme')).toBe('dark')
+      expect(getCookie(THEME_COOKIE_NAME)).toBe('dark')
     })
 
     it('applies system theme: stores cookie and applies a resolved light or dark class', async () => {
       // Pre-seed light so mounted theme is not system; re-selecting System alone would not fire setTheme.
-      setCookie('vite-ui-theme', 'light')
+      setCookie(THEME_COOKIE_NAME, 'light')
 
       const screen = await renderConfigDrawer()
       await openDrawer(screen)
@@ -126,7 +126,7 @@ describe('ConfigDrawer (integration)', () => {
           }),
         })
       )
-      await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('system'))
+      await vi.waitFor(() => expect(getCookie(THEME_COOKIE_NAME)).toBe('system'))
       await vi.waitFor(() => {
         const root = document.documentElement
         const hasLight = root.classList.contains('light')
@@ -224,14 +224,14 @@ describe('ConfigDrawer (integration)', () => {
           }),
         })
       )
-      await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('dark'))
+      await vi.waitFor(() => expect(getCookie(THEME_COOKIE_NAME)).toBe('dark'))
 
       await userEvent.click(
         screen.getByRole('button', {
           name: i18n.t('configDrawer.aria.resetTheme'),
         })
       )
-      await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('system'))
+      await vi.waitFor(() => expect(getCookie(THEME_COOKIE_NAME)).toBe('system'))
     })
 
     it('resets direction via section control after choosing RTL', async () => {
@@ -351,7 +351,7 @@ describe('ConfigDrawer (integration)', () => {
       screen.getByRole('radio', { name: /select full layout/i })
     )
 
-    await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBe('dark'))
+    await vi.waitFor(() => expect(getCookie(THEME_COOKIE_NAME)).toBe('dark'))
     await vi.waitFor(() => expect(getCookie('dir')).toBe('rtl'))
     await vi.waitFor(() => expect(getCookie('layout_variant')).toBe('floating'))
     await vi.waitFor(() =>
@@ -366,7 +366,7 @@ describe('ConfigDrawer (integration)', () => {
 
     await vi.waitFor(() => expect(getCookie('sidebar_state')).toBe('true'))
     await vi.waitFor(() => expect(getCookie('dir')).toBeUndefined())
-    await vi.waitFor(() => expect(getCookie('vite-ui-theme')).toBeUndefined())
+    await vi.waitFor(() => expect(getCookie(THEME_COOKIE_NAME)).toBeUndefined())
     await vi.waitFor(() => expect(getCookie('layout_variant')).toBe('inset'))
     await vi.waitFor(() => expect(getCookie('layout_collapsible')).toBe('icon'))
     await vi.waitFor(() =>

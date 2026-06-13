@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
@@ -30,12 +30,12 @@ export function SignIn2() {
             <p className='text-sm text-muted-foreground'>
               {t('auth.signIn.desc')} <br className='max-sm:hidden' />{' '}
               {t('auth.signIn.noAccount')}{' '}
-              <Link
-                to='/sign-up'
+              <a
+                href='/sign-up'
                 className='text-nowrap underline underline-offset-4 hover:text-primary'
               >
                 {t('sidebar.nav.authSignUp')}
-              </Link>
+              </a>
             </p>
           </div>
           <UserAuthForm />
@@ -65,14 +65,14 @@ export function SignIn2() {
           '[&>img]:absolute [&>img]:top-[15%] [&>img]:left-20 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>img]:object-top-left [&>img]:select-none'
         )}
       >
-        <img
+        <Image
           src={dashboardLight}
           className='dark:hidden'
           width={1024}
           height={1151}
           alt='Shadcn-Admin'
         />
-        <img
+        <Image
           src={dashboardDark}
           className='hidden dark:block'
           width={1024}

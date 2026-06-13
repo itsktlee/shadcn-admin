@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import type {
   ColumnFiltersState,
   OnChangeFn,
@@ -63,6 +63,7 @@ type UseTableUrlStateReturn = {
     pageCount: number,
     opts?: { resetTo?: 'first' | 'last' }
   ) => void
+  reset: () => void
 }
 
 export function useTableUrlState(
@@ -107,8 +108,7 @@ export function useTableUrlState(
     return collected
   }, [columnFiltersCfg, search])
 
-  const [columnFilters, setColumnFilters] =
-    useState<ColumnFiltersState>(initialColumnFilters)
+  const columnFilters = initialColumnFilters
 
   const pagination: PaginationState = useMemo(() => {
     const rawPage = (search as SearchRecord)[pageKey]
@@ -133,11 +133,11 @@ export function useTableUrlState(
     })
   }
 
-  const [globalFilter, setGlobalFilter] = useState<string | undefined>(() => {
+  const globalFilter = useMemo(() => {
     if (!globalFilterEnabled) return undefined
     const raw = (search as SearchRecord)[globalFilterKey]
     return typeof raw === 'string' ? raw : ''
-  })
+  }, [globalFilterEnabled, globalFilterKey, search])
 
   const onGlobalFilterChange: OnChangeFn<string> | undefined =
     globalFilterEnabled
@@ -147,7 +147,6 @@ export function useTableUrlState(
               ? updater(globalFilter ?? '')
               : updater
           const value = trimGlobal ? next.trim() : next
-          setGlobalFilter(value)
           navigate({
             search: (prev) => ({
               ...(prev as SearchRecord),
@@ -161,7 +160,6 @@ export function useTableUrlState(
   const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updater) => {
     const next =
       typeof updater === 'function' ? updater(columnFilters) : updater
-    setColumnFilters(next)
 
     const patch: Record<string, unknown> = {}
 
@@ -207,6 +205,23 @@ export function useTableUrlState(
     }
   }
 
+  const reset = () => {
+    const clearedColumnFilters = Object.fromEntries(
+      columnFiltersCfg.map((cfg) => [cfg.searchKey, undefined])
+    )
+
+    navigate({
+      search: (prev) => ({
+        ...(prev as SearchRecord),
+        [pageKey]: undefined,
+        [globalFilterKey]: globalFilterEnabled
+          ? undefined
+          : prev[globalFilterKey],
+        ...clearedColumnFilters,
+      }),
+    })
+  }
+
   return {
     globalFilter: globalFilterEnabled ? (globalFilter ?? '') : undefined,
     onGlobalFilterChange,
@@ -215,5 +230,6 @@ export function useTableUrlState(
     pagination,
     onPaginationChange,
     ensurePageInRange,
+    reset,
   }
 }

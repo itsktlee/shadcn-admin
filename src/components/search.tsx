@@ -1,7 +1,9 @@
+'use client'
+
 import { SearchIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { useSearch } from '@/context/search-provider'
+import { useDashboardSearch } from '@/providers/dashboard-search-provider'
 import { Button } from './ui/button'
 
 export function Search({
@@ -9,7 +11,7 @@ export function Search({
   placeholder,
   ...props
 }: React.ComponentProps<'button'> & { placeholder?: string }) {
-  const { setOpen } = useSearch()
+  const { setOpen } = useDashboardSearch()
   const { t } = useTranslation()
 
   return (
@@ -17,7 +19,7 @@ export function Search({
       {...props}
       variant='outline'
       className={cn(
-        'group relative h-8 w-full flex-1 justify-start rounded-md bg-muted/25 text-sm font-normal text-muted-foreground shadow-none hover:bg-accent sm:w-40 sm:pe-12 md:flex-none lg:w-52 xl:w-64',
+        'group relative h-8 min-w-0 w-full flex-1 justify-start rounded-md bg-muted/25 text-sm font-normal text-muted-foreground shadow-none hover:bg-accent sm:w-40 sm:pe-12 md:flex-none lg:w-52 xl:w-64',
         className
       )}
       aria-keyshortcuts='Meta+K Control+K'

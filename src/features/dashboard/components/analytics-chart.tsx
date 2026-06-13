@@ -1,4 +1,5 @@
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { useEffect, useRef, useState } from 'react'
+import { Area, AreaChart, XAxis, YAxis } from 'recharts'
 
 const axisColor = 'var(--muted-foreground)'
 const primarySeriesColor = 'var(--chart-1)'
@@ -7,73 +8,118 @@ const secondarySeriesColor = 'var(--chart-2)'
 const data = [
   {
     name: 'Mon',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 420,
+    uniques: 310,
   },
   {
     name: 'Tue',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 560,
+    uniques: 360,
   },
   {
     name: 'Wed',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 610,
+    uniques: 410,
   },
   {
     name: 'Thu',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 530,
+    uniques: 390,
   },
   {
     name: 'Fri',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 690,
+    uniques: 470,
   },
   {
     name: 'Sat',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 720,
+    uniques: 520,
   },
   {
     name: 'Sun',
-    clicks: Math.floor(Math.random() * 900) + 100,
-    uniques: Math.floor(Math.random() * 700) + 80,
+    clicks: 640,
+    uniques: 450,
   },
 ]
 
 export function AnalyticsChart() {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  useEffect(() => {
+    const measure = () => {
+      const element = containerRef.current
+
+      if (!element) {
+        return
+      }
+
+      const nextWidth = Math.round(element.getBoundingClientRect().width)
+      const nextHeight = Math.round(element.getBoundingClientRect().height)
+
+      setDimensions((prev) => {
+        if (prev.width === nextWidth && prev.height === nextHeight) {
+          return prev
+        }
+
+        return {
+          width: nextWidth,
+          height: nextHeight,
+        }
+      })
+    }
+
+    const frame = window.requestAnimationFrame(measure)
+    window.addEventListener('resize', measure)
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('resize', measure)
+    }
+  }, [])
+
   return (
-    <ResponsiveContainer width='100%' height={300}>
-      <AreaChart data={data}>
-        <XAxis
-          dataKey='name'
-          stroke={axisColor}
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          stroke={axisColor}
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <Area
-          type='monotone'
-          dataKey='clicks'
-          stroke={primarySeriesColor}
-          fill={primarySeriesColor}
-          fillOpacity={0.15}
-        />
-        <Area
-          type='monotone'
-          dataKey='uniques'
-          stroke={secondarySeriesColor}
-          fill={secondarySeriesColor}
-          fillOpacity={0.1}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+    <div
+      ref={containerRef}
+      className='min-w-0 w-full'
+      style={{ height: '300px' }}
+    >
+      {dimensions.width > 0 && dimensions.height > 0 ? (
+        <AreaChart
+          width={dimensions.width}
+          height={dimensions.height}
+          data={data}
+        >
+          <XAxis
+            dataKey='name'
+            stroke={axisColor}
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            stroke={axisColor}
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <Area
+            type='monotone'
+            dataKey='clicks'
+            stroke={primarySeriesColor}
+            fill={primarySeriesColor}
+            fillOpacity={0.15}
+          />
+          <Area
+            type='monotone'
+            dataKey='uniques'
+            stroke={secondarySeriesColor}
+            fill={secondarySeriesColor}
+            fillOpacity={0.1}
+          />
+        </AreaChart>
+      ) : null}
+    </div>
   )
 }

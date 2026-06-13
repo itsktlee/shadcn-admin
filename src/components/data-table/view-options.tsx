@@ -19,6 +19,7 @@ export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -41,6 +42,13 @@ export function DataTableViewOptions<TData>({
               typeof column.accessorFn !== 'undefined' && column.getCanHide()
           )
           .map((column) => {
+            const labelMeta = column.columnDef.meta as
+              | { label?: string; labelKey?: string }
+              | undefined
+            const label = labelMeta?.labelKey
+              ? t(labelMeta.labelKey)
+              : (labelMeta?.label ?? column.id)
+
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
@@ -48,7 +56,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {label}
               </DropdownMenuCheckboxItem>
             )
           })}

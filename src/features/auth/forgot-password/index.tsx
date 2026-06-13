@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Card,
@@ -16,7 +15,7 @@ export function ForgotPassword() {
 
   return (
     <AuthLayout>
-      <Card className='max-w-sm gap-4 sm:min-w-sm'>
+      <Card className='mx-auto w-full max-w-sm gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
             {t('auth.forgotPassword.title')}
@@ -31,12 +30,12 @@ export function ForgotPassword() {
         <CardFooter>
           <p className='mx-auto px-8 text-center text-sm text-balance text-muted-foreground'>
             {t('auth.forgotPassword.noAccount')}{' '}
-            <Link
-              to='/sign-up'
+            <a
+              href='/sign-up'
               className='underline underline-offset-4 hover:text-primary'
             >
               {t('sidebar.nav.authSignUp')}
-            </Link>
+            </a>
             .
           </p>
         </CardFooter>

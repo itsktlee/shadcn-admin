@@ -1,9 +1,13 @@
+'use client'
+
 import React from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { useSearch } from '@/context/search-provider'
-import { useTheme } from '@/context/theme-provider'
+import { resolveCommandMenuNavigationGroups } from '@/modules/navigation'
+import { useAuth } from '@/providers/auth-provider'
+import { useDashboardSearch } from '@/providers/dashboard-search-provider'
+import { useTheme } from '@/providers/theme-provider'
 import {
   CommandDialog,
   CommandEmpty,
@@ -13,14 +17,18 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
-import { sidebarData } from './layout/data/sidebar-data'
 import { ScrollArea } from './ui/scroll-area'
 
 export function CommandMenu() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { setTheme } = useTheme()
-  const { open, setOpen } = useSearch()
+  const { open, setOpen } = useDashboardSearch()
+  const { hasPermission } = useAuth()
   const { t } = useTranslation()
+  const commandMenuNavigationGroups = React.useMemo(
+    () => resolveCommandMenuNavigationGroups(hasPermission),
+    [hasPermission]
+  )
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
@@ -36,7 +44,7 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>{t('searchDialog.empty')}</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
+          {commandMenuNavigationGroups.map((group) => (
             <CommandGroup
               key={group.titleKey ?? group.title}
               heading={group.titleKey ? t(group.titleKey) : group.title}
@@ -52,7 +60,7 @@ export function CommandMenu() {
                       key={`${navItem.url}-${i}`}
                       value={navTitle}
                       onSelect={() => {
-                        runCommand(() => navigate({ to: navItem.url }))
+                        runCommand(() => router.push(navItem.url))
                       }}
                     >
                       <div className='flex size-4 items-center justify-center'>
@@ -67,7 +75,7 @@ export function CommandMenu() {
                     key={`${navItem.title}-${subItem.url}-${i}`}
                     value={`${navTitle}-${subItem.url}`}
                     onSelect={() => {
-                      runCommand(() => navigate({ to: subItem.url }))
+                      runCommand(() => router.push(subItem.url))
                     }}
                   >
                     <div className='flex size-4 items-center justify-center'>

@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.next
 dist
 dist-ssr
 *.local
@@ -34,6 +35,7 @@ dist-ssr
 .vitest-attachments/
 
 # Local generated workspace/cache files
+.codegraph/
 .pnpm-store/
 .tanstack/
 pnpm-workspace.yaml

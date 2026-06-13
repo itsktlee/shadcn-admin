@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Card,
@@ -16,7 +15,7 @@ export function SignUp() {
 
   return (
     <AuthLayout>
-      <Card className='max-w-sm gap-4'>
+      <Card className='mx-auto w-full max-w-sm gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
             {t('auth.signUp.title')}
@@ -24,12 +23,12 @@ export function SignUp() {
           <CardDescription>
             {t('auth.signUp.desc')} <br />
             {t('auth.signUp.hasAccount')}{' '}
-            <Link
-              to='/sign-in'
+            <a
+              href='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
               {t('sidebar.nav.authSignIn')}
-            </Link>
+            </a>
           </CardDescription>
         </CardHeader>
         <CardContent>

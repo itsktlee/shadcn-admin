@@ -1,6 +1,9 @@
-import { useNavigate, useLocation } from '@tanstack/react-router'
+'use client'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { useAuthStore } from '@/stores/auth-store'
+import { signOut } from '@/services/auth/client'
+import { useAuth } from '@/providers/auth-provider'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 
 interface SignOutDialogProps {
@@ -9,20 +12,19 @@ interface SignOutDialogProps {
 }
 
 export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { auth } = useAuthStore()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const { setSession } = useAuth()
   const { t } = useTranslation()
 
   const handleSignOut = () => {
-    auth.reset()
-    // Preserve current location for redirect after sign-in
-    const currentPath = location.href
-    navigate({
-      to: '/sign-in',
-      search: { redirect: currentPath },
-      replace: true,
-    })
+    signOut()
+    setSession(null)
+    const currentQuery = searchParams.toString()
+    const currentPath = currentQuery ? `${pathname}?${currentQuery}` : pathname
+    router.replace(`/sign-in?redirect=${encodeURIComponent(currentPath)}`)
+    router.refresh()
   }
 
   return (

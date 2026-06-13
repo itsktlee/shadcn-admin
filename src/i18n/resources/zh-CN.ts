@@ -38,24 +38,190 @@ export const zhCN = {
     file: '文件',
     label: '标签',
   },
+  permissions: {
+    denied: {
+      title: '访问受限',
+      description: '你当前的权限集不允许执行这个动作：{{action}}。',
+      defaultAction: '当前操作',
+      backHome: '返回仪表盘',
+    },
+  },
   dataTable: {
     noResults: '没有找到结果。',
     reset: '重置',
     view: '视图',
     toggleColumns: '切换列显示',
+    rowsPerPage: '每页行数',
+    pageStatus: '第 {{current}} / {{total}} 页',
     sortAsc: '升序',
     sortDesc: '降序',
     hide: '隐藏',
     clearFilters: '清除筛选',
+    goToFirstPage: '前往第一页',
+    goToPreviousPage: '前往上一页',
+    goToPage: '前往第 {{page}} 页',
+    goToNextPage: '前往下一页',
+    goToLastPage: '前往最后一页',
     selectedCount: '已选 {{count}} 项',
     selectedSummary: '已选 {{count}} 个{{entityLabel}}',
-    bulkActionsAvailable: '已选 {{count}} 个{{entityLabel}}，可使用批量操作工具栏。',
+    bulkActionsAvailable:
+      '已选 {{count}} 个{{entityLabel}}，可使用批量操作工具栏。',
     bulkActionsLabel: '{{count}} 个已选{{entityLabel}}的批量操作',
     clearSelection: '清除选择',
     clearSelectionWithShortcut: '清除选择（Escape）',
   },
   feedback: {
     submittedValues: '你提交的内容如下：',
+  },
+  foundation: {
+    badge: 'M1 基础层',
+    title: 'Next.js 模板基础壳已经就位，可继续迁移 shell。',
+    description:
+      '这个页面只用于验证全局启动链：主题、语言、方向、字体、Query 和提示消息。',
+    preview: '当前启动状态',
+    theme: '主题',
+    language: '语言',
+    direction: '方向',
+    font: '字体',
+    actions: {
+      toast: '显示提示',
+    },
+  },
+  multishell: {
+    dashboard: {
+      badge: 'M2 多壳层',
+      title: 'Dashboard 壳已经和 auth、errors 路由分离。',
+      description:
+        '这个页面用于验证 dashboard 专属壳层边界，同时继续保留主题、语言、方向和字体的基础控制。',
+      preview: '当前 dashboard 壳状态',
+    },
+    shellParity: {
+      badge: 'M3 壳层一致性',
+      dashboardLead:
+        '共享 dashboard 壳已经接回原始侧边栏、顶部操作区、命令菜单和 settings 二级导航。',
+      placeholderTitle: '路由占位页',
+      routeLabel: '路由',
+      moduleDescription:
+        '{{title}} 已接入共享 dashboard 壳，后续可以继续迁移模块内部内容。',
+      moduleCardDescription:
+        '这个页面用于先接住导航路由，模块主体内容会在后续里程碑继续迁移。',
+      authRouteDescription:
+        '这个认证路由会继续保留在独立 auth 壳里，完整表单一致性会在后续里程碑迁移。',
+      errorRouteDescription:
+        '这个错误路由会继续保留在独立 errors 壳里，完整错误状态会在后续里程碑迁移。',
+    },
+    auth: {
+      badge: 'Auth 壳',
+      title: '认证路由现在运行在独立壳层中。',
+      description:
+        '这个页面只证明 auth 壳边界已经成立。完整的认证界面一致性会在下一里程碑迁移。',
+    },
+    errors: {
+      badge: '错误壳',
+      title: '错误路由现在不再复用 dashboard 壳。',
+      description:
+        '这个页面只是独立错误壳的占位页。完整错误流会放在后续里程碑处理。',
+      backHome: '返回 dashboard',
+    },
+  },
+  helpCenterPage: {
+    badge: 'Showcase',
+    eyebrow: '支持中心类模块示例',
+    title: '帮助中心',
+    description:
+      '你可以把它当成知识库、入门引导、内部支持或运营说明类页面的展示示例，但不要把它当成业务 reference module。',
+    openLink: '打开',
+    quickLinks: {
+      adoption: {
+        title: '模板接管',
+        description: '先沿用当前运行时，再按顺序替换壳层、导航和业务模块。',
+        href: '/settings/appearance',
+      },
+      navigation: {
+        title: '导航替换',
+        description:
+          '以现有 settings 和 resources 路由为锚点，逐步把侧边栏替换成你的真实业务模块。',
+        href: '/settings',
+      },
+      permissions: {
+        title: '权限基线',
+        description: '在接入真实认证服务之前，先把路由访问和动作级权限保持一致。',
+        href: '/resources',
+      },
+    },
+    faq: {
+      title: '常见问题',
+      description: '这些问题可以帮助模板接管过程保持稳定、可预期。',
+      items: {
+        replaceShell: {
+          question:
+            '如果我要把 demo 壳替换成自己的业务模块，应该先从哪里开始？',
+          answer:
+            '先保留共享 dashboard 壳，先替换导航 manifest，再一块一块迁移真实业务模块。',
+        },
+        dataAdapters: {
+          question: '后续要接真实 API，应该怎么衔接？',
+          answer:
+            '优先参考 resources 模块：保留 feature UI，替换 adapter 实现，不要先打散路由和壳层结构。',
+        },
+        themeAndLanguage: {
+          question: '主题和语言要不要先处理好，再做业务？',
+          answer:
+            '建议先处理。把它们当成模板基础设施，后续业务模块就能直接继承，不需要返工。',
+        },
+      },
+    },
+    resources: {
+      title: '值得优先看的参考面',
+      description: '这些页面最适合帮助你理解当前模板应该如何被正式接管。',
+      items: {
+        runtime: {
+          title: '运行时配置',
+          description:
+            '在接外部服务前，先确认环境变量开关、cookie key 和浏览器运行时说明。',
+        },
+        settings: {
+          title: 'Settings 模块',
+          description: '参考设置页的表单组织、二级导航，以及全局偏好处理方式。',
+        },
+        resources: {
+          title: 'Resources 模块',
+          description: '参考列表、CRUD、query、adapter 和权限接线方式。',
+        },
+      },
+    },
+  },
+  errorsShowcase: {
+    actions: {
+      goBack: '返回上一页',
+      backHome: '返回首页',
+    },
+    unauthorized: {
+      title: '未授权访问',
+      descriptionLineOne: '请先使用正确的账户凭据登录，',
+      descriptionLineTwo: '然后再访问这个资源。',
+    },
+    forbidden: {
+      title: '禁止访问',
+      descriptionLineOne: '你当前没有足够权限，',
+      descriptionLineTwo: '无法查看这个资源。',
+    },
+    notFound: {
+      title: '页面不存在',
+      descriptionLineOne: '你访问的页面似乎不存在，',
+      descriptionLineTwo: '或者已经被移除。',
+    },
+    internalServerError: {
+      title: '糟糕，出错了',
+      descriptionLineOne: '很抱歉给你带来不便。',
+      descriptionLineTwo: '请稍后再试。',
+    },
+    maintenance: {
+      title: '网站正在维护中',
+      descriptionLineOne: '当前站点暂时不可用，',
+      descriptionLineTwo: '我们会尽快恢复。',
+      learnMore: '了解更多',
+    },
   },
   sidebar: {
     groups: {
@@ -65,14 +231,11 @@ export const zhCN = {
     },
     nav: {
       dashboard: '仪表盘',
+      resources: '资源',
       tasks: '任务',
       apps: '应用',
       chats: '消息',
       users: '用户',
-      clerk: 'Clerk 认证',
-      clerkSignIn: '登录',
-      clerkSignUp: '注册',
-      clerkUserManagement: '用户管理',
       auth: '认证',
       authSignIn: '登录',
       authSignInTwoCol: '双栏登录',
@@ -260,7 +423,8 @@ export const zhCN = {
     },
     languageForm: {
       language: '界面语言',
-      languageDesc: '这个语言会用于整个管理系统中的导航、表单、弹窗和页面文案。',
+      languageDesc:
+        '这个语言会用于整个管理系统中的导航、表单、弹窗和页面文案。',
       languageHint: '你也可以随时通过右上角的语言图标快速切换。',
       languagePlaceholder: '选择语言',
       languageSearchPlaceholder: '搜索语言...',
@@ -381,6 +545,102 @@ export const zhCN = {
     sort: {
       ascending: '升序',
       descending: '降序',
+    },
+  },
+  resources: {
+    title: '资源目录',
+    desc: '用统一契约、导航注册和查询链路验证模板级列表模块。',
+    filterPlaceholder: '按名称、标识或负责人搜索...',
+    actions: {
+      create: '新建资源',
+    },
+    entities: {
+      singular: '资源',
+      plural: '资源',
+    },
+    filters: {
+      status: '状态',
+      category: '分类',
+    },
+    columns: {
+      name: '资源',
+      status: '状态',
+      category: '分类',
+      owner: '负责人',
+      tags: '标签',
+      updatedAt: '最近更新',
+    },
+    fields: {
+      slug: '标识',
+      description: '描述',
+    },
+    states: {
+      loading: '正在加载资源列表...',
+      syncing: '正在同步结果...',
+      total: '共 {{count}} 个资源',
+    },
+    rowActions: {
+      openMenu: '打开资源操作菜单',
+    },
+    bulkActions: {
+      updateStatus: '批量更新状态',
+      statusLoading: '正在更新资源状态...',
+      statusSuccess: '已将 {{count}} 个资源更新为“{{status}}”。',
+      deleteSelected: '删除所选资源',
+      deleteTitle: '删除 {{count}} 个资源',
+      deleteDesc: '确认要删除所选资源吗？此操作无法撤销。',
+      deleteLoading: '正在删除资源...',
+      deleteSuccess: '已删除 {{count}} 个资源。',
+    },
+    dialogs: {
+      save: '保存变更',
+      create: {
+        title: '新建资源',
+        desc: '填写资源基础信息，创建一个新的 reference resource。',
+        loading: '正在创建资源...',
+        success: '资源已创建。',
+      },
+      update: {
+        title: '编辑资源',
+        desc: '更新当前资源的信息，并保持共享契约与列表视图同步。',
+        loading: '正在更新资源...',
+        success: '资源已更新。',
+      },
+      delete: {
+        title: '删除资源',
+        desc: '确认要删除资源“{{name}}”（{{slug}}）吗？此操作无法撤销。',
+        loading: '正在删除资源...',
+        success: '资源已删除。',
+      },
+      placeholders: {
+        name: '例如：Analytics Core',
+        slug: '例如：analytics-core',
+        owner: '例如：Platform Team',
+        category: '选择分类',
+        status: '选择状态',
+        tags: '多个标签请用英文逗号分隔',
+        description: '补充该资源的用途、边界或使用说明。',
+      },
+    },
+    validation: {
+      nameRequired: '请输入资源名称。',
+      slugRequired: '请输入资源标识。',
+      ownerRequired: '请输入负责人。',
+      categoryRequired: '请选择资源分类。',
+      statusRequired: '请选择资源状态。',
+    },
+    data: {
+      statuses: {
+        draft: '草稿',
+        active: '启用中',
+        archived: '已归档',
+      },
+      categories: {
+        operations: '运营',
+        analytics: '分析',
+        workspace: '工作台',
+        infrastructure: '基础设施',
+      },
     },
   },
   users: {
@@ -537,7 +797,8 @@ export const zhCN = {
       statusSuccess_one: '已将 {{count}} 个任务的状态更新为“{{status}}”。',
       statusSuccess_other: '已将 {{count}} 个任务的状态更新为“{{status}}”。',
       priorityLoading: '正在更新优先级...',
-      prioritySuccess_one: '已将 {{count}} 个任务的优先级更新为“{{priority}}”。',
+      prioritySuccess_one:
+        '已将 {{count}} 个任务的优先级更新为“{{priority}}”。',
       prioritySuccess_other:
         '已将 {{count}} 个任务的优先级更新为“{{priority}}”。',
       exportLoading: '正在导出任务...',
@@ -663,49 +924,6 @@ export const zhCN = {
       errors: {
         codeLength: '请输入 6 位验证码。',
       },
-    },
-  },
-  clerk: {
-    authLayout: {
-      learnMore: '欢迎来到 Clerk 示例认证页。',
-      backToPrefix: '返回',
-      quote: '先快速搭好安全的后台模板，再把示例文案替换成你自己的产品表达。',
-      quoteAuthor: '模板演示',
-    },
-    route: {
-      missingKeyTitle: '未找到 Publishable Key',
-      missingKeyDesc: '你需要先在 Clerk 生成一个 publishable key，并将它写入 .env 文件。',
-      setupTitle: '设置你的 Clerk API Key',
-      stepOnePrefix: '前往',
-      stepOneSuffix: '中的 API keys 页面。',
-      stepTwo: '在 Quick Copy 区域复制你的 Clerk Publishable Key。',
-      stepThree: '将 .env.example 重命名为 .env',
-      stepFour: '把刚刚复制的 key 粘贴到 .env 文件中。',
-      finalResult: '最终结果应类似下面这样：',
-      optionalTitle: 'Clerk 集成是可选的',
-      optionalDescOne:
-        'Clerk 集成完全位于 src/routes/clerk 目录中。如果你计划使用 Clerk 作为认证服务，可以考虑把 ClerkProvider 放到根路由。',
-      optionalDescTwo:
-        '如果你不打算使用 Clerk，可以安全移除这个目录以及相关的 @clerk/react 依赖。',
-      optionalDescThree:
-        '这套接入是模块化设计，不会影响应用的其他部分。',
-    },
-    userManagement: {
-      learnMoreUsers: "这和 '/users' 页面是同一套用户管理界面。",
-      learnMoreProfile:
-        '你可以通过页面右上角的 User Profile 菜单退出登录，或管理 / 删除当前账户。',
-      unauthorizedTitle: '未授权访问',
-      unauthorizedDescPrefix: '你需要先通过',
-      unauthorizedDescSuffix: '完成认证，才能访问这个资源。',
-      unauthorizedLearnMoreOne: "这和 '/users' 页面是同一套用户管理界面。",
-      unauthorizedLearnMoreTwo: '你需要先使用 Clerk 登录后，才能访问这条路由。',
-      unauthorizedLearnMoreThree:
-        '登录后，你可以在页面右上角的 User Profile 下拉菜单中退出登录或删除账户。',
-      goBack: '返回上一页',
-      signIn: '登录',
-      redirectCountdown: '{{count}} 秒后跳转到登录页',
-      redirectNow: '正在跳转...',
-      cancelRedirect: '取消跳转',
     },
   },
 } as const

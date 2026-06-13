@@ -52,6 +52,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     pagination,
     onPaginationChange,
     ensurePageInRange,
+    reset,
   } = useTableUrlState({
     search,
     navigate,
@@ -103,6 +104,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
+        onReset={reset}
         searchPlaceholder={t('users.filterPlaceholder')}
         searchKey='username'
         filters={[

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
@@ -21,12 +20,12 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@/components/ui/input-otp'
+import { navigateLegacyAuth } from '../../legacy-auth-navigation'
 
 type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const formSchema = z.object({
     otp: z
@@ -49,7 +48,7 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
     setTimeout(() => {
       setIsLoading(false)
-      navigate({ to: '/' })
+      navigateLegacyAuth('/')
     }, 1000)
   }
 

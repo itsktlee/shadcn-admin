@@ -1,7 +1,9 @@
+'use client'
+
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
+import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
@@ -218,7 +220,7 @@ export function NotificationsForm() {
                 <FormDescription>
                   {t('settings.notificationsForm.mobileDevicesDescPrefix')}{' '}
                   <Link
-                    to='/settings'
+                    href='/settings'
                     className='underline decoration-dashed underline-offset-4 hover:decoration-solid'
                   >
                     {t('settings.notificationsForm.mobileDevicesDescLink')}

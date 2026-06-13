@@ -1,3 +1,7 @@
+/**
+ * Legacy Vite entry retained only as migration/reference surface.
+ * The active template runtime is Next.js App Router via `pnpm dev`.
+ */
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AxiosError } from 'axios'
@@ -91,6 +95,10 @@ declare module '@tanstack/react-router' {
 // Render the app
 const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[legacy-entry] Loaded src/main.tsx. This is the retained Vite reference entry; use `pnpm dev` for the active Next.js template runtime.'
+  )
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>

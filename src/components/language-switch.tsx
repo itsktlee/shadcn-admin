@@ -1,3 +1,5 @@
+'use client'
+
 import { Check, Languages } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { normalizeLanguage, type AppLanguage } from '@/i18n'

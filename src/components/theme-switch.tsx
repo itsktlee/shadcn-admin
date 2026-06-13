@@ -1,8 +1,10 @@
+'use client'
+
 import { useEffect } from 'react'
 import { Check, Moon, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/context/theme-provider'
+import { useTheme } from '@/providers/theme-provider'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

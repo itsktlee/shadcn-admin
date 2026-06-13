@@ -10,6 +10,7 @@ type DataTableToolbarProps<TData> = {
   table: Table<TData>
   searchPlaceholder?: string
   searchKey?: string
+  onReset?: () => void
   filters?: {
     columnId: string
     title: string
@@ -25,12 +26,14 @@ export function DataTableToolbar<TData>({
   table,
   searchPlaceholder,
   searchKey,
+  onReset,
   filters = [],
 }: DataTableToolbarProps<TData>) {
   const { t } = useTranslation()
   const isFiltered =
     table.getState().columnFilters.length > 0 || table.getState().globalFilter
-  const resolvedSearchPlaceholder = searchPlaceholder ?? `${t('common.search')}...`
+  const resolvedSearchPlaceholder =
+    searchPlaceholder ?? `${t('common.search')}...`
 
   return (
     <div className='flex items-center justify-between'>
@@ -72,7 +75,12 @@ export function DataTableToolbar<TData>({
           <Button
             variant='ghost'
             onClick={() => {
-              table.resetColumnFilters()
+              if (onReset) {
+                onReset()
+                return
+              }
+
+              table.setColumnFilters([])
               table.setGlobalFilter('')
             }}
             className='h-8 px-2 lg:px-3'

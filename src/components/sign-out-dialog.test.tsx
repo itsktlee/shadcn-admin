@@ -4,32 +4,40 @@ import { userEvent } from 'vitest/browser'
 import i18n from '@/i18n'
 import { SignOutDialog } from './sign-out-dialog'
 
-const navigate = vi.fn()
-const reset = vi.fn()
+const mocks = vi.hoisted(() => ({
+  pathname: '/resources',
+  refresh: vi.fn(),
+  replace: vi.fn(),
+  searchParams: new URLSearchParams('tab=open&page=2'),
+  setSession: vi.fn(),
+  signOut: vi.fn(),
+}))
 
-const MOCK_HREF = 'https://app.test/dashboard?tab=1'
+vi.mock('next/navigation', () => ({
+  usePathname: () => mocks.pathname,
+  useRouter: () => ({
+    refresh: mocks.refresh,
+    replace: mocks.replace,
+  }),
+  useSearchParams: () => mocks.searchParams,
+}))
 
-vi.mock('@/stores/auth-store', () => ({
-  useAuthStore: () => ({
-    auth: { reset },
+vi.mock('@/providers/auth-provider', () => ({
+  useAuth: () => ({
+    setSession: mocks.setSession,
   }),
 }))
 
-vi.mock('@tanstack/react-router', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@tanstack/react-router')>()
-  return {
-    ...actual,
-    useNavigate: () => navigate,
-    useLocation: () => ({ href: MOCK_HREF }),
-  }
-})
+vi.mock('@/services/auth/client', () => ({
+  signOut: mocks.signOut,
+}))
 
 describe('SignOutDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('calls auth.reset and navigates to sign-in with current location as redirect', async () => {
+  it('clears the session and redirects to sign-in with the current location as redirect', async () => {
     const { getByRole } = await render(
       <SignOutDialog open onOpenChange={vi.fn()} />
     )
@@ -38,22 +46,25 @@ describe('SignOutDialog', () => {
       getByRole('button', { name: i18n.t('signOutDialog.confirm') })
     )
 
-    expect(reset).toHaveBeenCalledOnce()
-    expect(navigate).toHaveBeenCalledWith({
-      to: '/sign-in',
-      search: { redirect: MOCK_HREF },
-      replace: true,
-    })
+    expect(mocks.signOut).toHaveBeenCalledOnce()
+    expect(mocks.setSession).toHaveBeenCalledWith(null)
+    expect(mocks.replace).toHaveBeenCalledWith(
+      '/sign-in?redirect=%2Fresources%3Ftab%3Dopen%26page%3D2'
+    )
+    expect(mocks.refresh).toHaveBeenCalledOnce()
   })
 
-  it('does not call reset or navigate when Cancel is clicked', async () => {
+  it('does not clear session or navigate when Cancel is clicked', async () => {
     const { getByRole } = await render(
       <SignOutDialog open onOpenChange={vi.fn()} />
     )
 
-    await userEvent.click(getByRole('button', { name: /^Cancel$/i }))
+    await userEvent.click(
+      getByRole('button', { name: i18n.t('common.cancel') })
+    )
 
-    expect(reset).not.toHaveBeenCalled()
-    expect(navigate).not.toHaveBeenCalled()
+    expect(mocks.signOut).not.toHaveBeenCalled()
+    expect(mocks.setSession).not.toHaveBeenCalled()
+    expect(mocks.replace).not.toHaveBeenCalled()
   })
 })

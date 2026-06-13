@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
+import { navigateLegacyAuth } from '../../legacy-auth-navigation'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
@@ -32,7 +32,6 @@ export function UserAuthForm({
 }: UserAuthFormProps) {
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
   const { auth } = useAuthStore()
   const formSchema = z.object({
     email: z.email({
@@ -75,7 +74,7 @@ export function UserAuthForm({
 
         // Redirect to the stored location or default to dashboard
         const targetPath = redirectTo || '/'
-        navigate({ to: targetPath, replace: true })
+        navigateLegacyAuth(targetPath, { replace: true })
 
         return t('auth.signIn.success', { email: data.email })
       },
@@ -116,12 +115,12 @@ export function UserAuthForm({
                 />
               </FormControl>
               <FormMessage />
-              <Link
-                to='/forgot-password'
+              <a
+                href='/forgot-password'
                 className='absolute inset-e-0 -top-0.5 text-sm font-medium text-muted-foreground hover:opacity-75'
               >
                 {t('auth.signIn.forgotPassword')}
-              </Link>
+              </a>
             </FormItem>
           )}
         />

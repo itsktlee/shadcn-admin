@@ -1,5 +1,6 @@
 import globals from 'globals'
 import js from '@eslint/js'
+import nextPlugin from '@next/eslint-plugin-next'
 import pluginQuery from '@tanstack/eslint-plugin-query'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -7,7 +8,15 @@ import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig(
-  { ignores: ['dist', 'src/components/ui'] },
+  {
+    ignores: ['.next/**', 'dist/**', 'next-env.d.ts', 'src/components/ui/**'],
+  },
+  {
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {},
+  },
   {
     extends: [
       js.configs.recommended,
@@ -20,10 +29,13 @@ export default defineConfig(
       globals: globals.browser,
     },
     plugins: {
+      '@next/next': nextPlugin,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
@@ -54,6 +66,24 @@ export default defineConfig(
       ],
       // Prevent duplicate imports from the same module
       'no-duplicate-imports': 'error',
+    },
+  },
+  {
+    files: ['app/**/*.{ts,tsx}', 'src/providers/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    files: ['**/*.test.{ts,tsx}'],
+    rules: {
+      '@next/next/no-assign-module-variable': 'off',
     },
   }
 )

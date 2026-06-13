@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -19,6 +18,9 @@ type TopNavProps = React.HTMLAttributes<HTMLElement> & {
 }
 
 export function TopNav({ className, links, ...props }: TopNavProps) {
+  const linkClassName = (isActive: boolean) =>
+    `text-sm font-medium transition-colors hover:text-primary ${isActive ? '' : 'text-muted-foreground'}`
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -35,13 +37,21 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         <DropdownMenuContent side='bottom' align='start'>
           {links.map(({ title, href, isActive, disabled }) => (
             <DropdownMenuItem key={`${title}-${href}`} asChild>
-              <Link
-                to={href}
-                className={!isActive ? 'text-muted-foreground' : ''}
-                disabled={disabled}
+              <a
+                href={disabled ? undefined : href}
+                aria-disabled={disabled || undefined}
+                className={cn(
+                  !isActive && 'text-muted-foreground',
+                  disabled && 'pointer-events-none opacity-50'
+                )}
+                onClick={(event) => {
+                  if (disabled) {
+                    event.preventDefault()
+                  }
+                }}
               >
                 {title}
-              </Link>
+              </a>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -55,14 +65,22 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         {...props}
       >
         {links.map(({ title, href, isActive, disabled }) => (
-          <Link
+          <a
             key={`${title}-${href}`}
-            to={href}
-            disabled={disabled}
-            className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? '' : 'text-muted-foreground'}`}
+            href={disabled ? undefined : href}
+            aria-disabled={disabled || undefined}
+            className={cn(
+              linkClassName(isActive),
+              disabled && 'pointer-events-none opacity-50'
+            )}
+            onClick={(event) => {
+              if (disabled) {
+                event.preventDefault()
+              }
+            }}
           >
             {title}
-          </Link>
+          </a>
         ))}
       </nav>
     </>

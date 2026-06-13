@@ -1,5 +1,4 @@
-import { type ChangeEvent, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { type ChangeEvent, useEffect, useState } from 'react'
 import { SlidersHorizontal, ArrowUpAZ, ArrowDownAZ } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -20,21 +19,16 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { apps } from './data/apps'
-
-const route = getRouteApi('/_authenticated/apps/')
-
-type AppType = 'all' | 'connected' | 'notConnected'
+import {
+  type AppType,
+  readLegacyAppsSearch,
+  writeLegacyAppsSearch,
+} from './legacy-apps-search'
 
 export function Apps() {
   const { t } = useTranslation()
-  const {
-    filter = '',
-    type = 'all',
-    sort: initSort = 'asc',
-  } = route.useSearch()
-  const navigate = route.useNavigate()
-
-  const [sort, setSort] = useState(initSort)
+  const [searchState, setSearchState] = useState(() => readLegacyAppsSearch())
+  const { filter, type, sort } = searchState
   const [appType, setAppType] = useState(type)
   const [searchTerm, setSearchTerm] = useState(filter)
   const appText = new Map<AppType, string>([
@@ -42,6 +36,18 @@ export function Apps() {
     ['connected', t('apps.types.connected')],
     ['notConnected', t('apps.types.notConnected')],
   ])
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const nextSearchState = readLegacyAppsSearch()
+      setSearchState(nextSearchState)
+      setSearchTerm(nextSearchState.filter)
+      setAppType(nextSearchState.type)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   const filteredApps = apps
     .sort((a, b) =>
@@ -59,28 +65,32 @@ export function Apps() {
     .filter((app) => app.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value)
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        filter: e.target.value || undefined,
-      }),
-    })
+    const nextSearchState = {
+      ...searchState,
+      filter: e.target.value,
+    }
+    setSearchState(nextSearchState)
+    setSearchTerm(nextSearchState.filter)
+    writeLegacyAppsSearch(nextSearchState)
   }
 
   const handleTypeChange = (value: AppType) => {
+    const nextSearchState = {
+      ...searchState,
+      type: value,
+    }
+    setSearchState(nextSearchState)
     setAppType(value)
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        type: value === 'all' ? undefined : value,
-      }),
-    })
+    writeLegacyAppsSearch(nextSearchState)
   }
 
   const handleSortChange = (sort: 'asc' | 'desc') => {
-    setSort(sort)
-    navigate({ search: (prev) => ({ ...prev, sort }) })
+    const nextSearchState = {
+      ...searchState,
+      sort,
+    }
+    setSearchState(nextSearchState)
+    writeLegacyAppsSearch(nextSearchState)
   }
 
   return (

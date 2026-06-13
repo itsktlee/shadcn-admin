@@ -23,10 +23,18 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+const isFileList = (value: unknown): value is FileList => {
+  if (typeof FileList === 'undefined') {
+    return true
+  }
+
+  return value instanceof FileList
+}
+
 function createImportSchema(t: (key: string) => string) {
   return z.object({
     file: z
-      .instanceof(FileList)
+      .custom<FileList>(isFileList)
       .refine((files) => files.length > 0, {
         message: t('tasks.importDialog.fileRequired'),
       })

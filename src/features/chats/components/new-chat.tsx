@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Check, X } from 'lucide-react'
+import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Badge } from '@/components/ui/badge'
@@ -94,9 +95,11 @@ export function NewChat({ users, onOpenChange, open }: NewChatProps) {
                     className='flex items-center justify-between gap-2 hover:bg-accent hover:text-accent-foreground'
                   >
                     <div className='flex items-center gap-2'>
-                      <img
+                      <Image
                         src={user.profile || '/placeholder.svg'}
                         alt={user.fullName}
+                        width={32}
+                        height={32}
                         className='h-8 w-8 rounded-full'
                       />
                       <div className='flex flex-col'>
