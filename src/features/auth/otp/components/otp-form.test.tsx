@@ -1,15 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { type Locator, userEvent } from 'vitest/browser'
+import i18n from '@/i18n'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { OtpForm } from './otp-form'
 
-const navigate = vi.fn()
+const mocks = vi.hoisted(() => ({
+  navigate: vi.fn(),
+}))
 
-vi.mock('@tanstack/react-router', async (orig) => {
-  const actual = await orig<typeof import('@tanstack/react-router')>()
-  return { ...actual, useNavigate: () => navigate }
-})
+const FORM_LABELS = {
+  otp: i18n.t('auth.otp.srLabel'),
+  verify: i18n.t('auth.otp.action'),
+} as const
+
+vi.mock('../../legacy-auth-navigation', () => ({
+  navigateLegacyAuth: mocks.navigate,
+}))
 
 vi.mock('@/lib/show-submitted-data', () => ({ showSubmittedData: vi.fn() }))
 
@@ -22,8 +29,8 @@ describe('OtpForm', () => {
     vi.clearAllMocks()
 
     screen = await render(<OtpForm />)
-    otpInput = screen.getByLabelText(/^One-Time Password$/i)
-    verifyButton = screen.getByRole('button', { name: /^Verify$/i })
+    otpInput = screen.getByLabelText(FORM_LABELS.otp)
+    verifyButton = screen.getByRole('button', { name: FORM_LABELS.verify })
   })
 
   afterEach(() => {
@@ -50,6 +57,6 @@ describe('OtpForm', () => {
     expect(showSubmittedData).toHaveBeenCalledWith({ otp: '123456' })
 
     await vi.advanceTimersByTimeAsync(1000)
-    expect(navigate).toHaveBeenCalledWith({ to: '/' })
+    expect(mocks.navigate).toHaveBeenCalledWith('/')
   })
 })

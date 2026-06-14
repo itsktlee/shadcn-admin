@@ -6,6 +6,13 @@
 
 当前仓库已经不是上游的原始 `Vite + TanStack Router` 项目，而是迁移后的 `Next.js App Router` 母模板。
 
+默认应把它理解成：
+
+- 一个保留完整 demo admin 展示面的开源模板
+- 一个带工程基线的可接管母模板
+
+而不是默认继续收缩成极简空壳。
+
 如果你后续让 AI 在这个仓库上继续开发，应明确告诉它：
 
 - 这是 `Next.js` 项目
@@ -23,11 +30,40 @@
 - 哪些旧 `Vite / TanStack Router` 文件只是迁移参考
 - 哪些 `manifest.ts` 仍然活跃，但对应旧页面实现已经不是当前主线
 
-如果你后续准备继续做深清理，再看这份：
+如果你后续明确要做“极简母模板分支”或历史包袱裁剪，再看这两份：
 
 - [Legacy 清理清单](./template-legacy-removal-checklist.md)
+- [模板展示面策略](./template-showcase-strategy.md)
 
 ## 2. 业务接管的推荐顺序
+
+在真正动手前，建议先明确你要走哪条路线：
+
+### 路线 A：保留完整 demo admin
+
+适合：
+
+- 开源模板
+- 内部基础模板
+- 希望拉下来就能看到完整展示面
+
+做法：
+
+- 保留 `apps / tasks / users / chats / help-center / auth showcase / errors showcase`
+- 优先替换导航、manifest、`resources`、mock auth 和 adapter
+
+### 路线 B：极简母模板
+
+适合：
+
+- 只给内部项目组使用
+- 不需要完整 demo admin 展示面
+- 明确接受继续裁剪历史参考面
+
+做法：
+
+- 在保留工程基线后，按需进入 legacy / showcase 清理
+- 这条路线不是当前仓库的默认建议
 
 ### 第一阶段：先接管壳
 
@@ -91,6 +127,15 @@ NEXT_PUBLIC_TEMPLATE_MODULE_RESOURCES=false
 - mock auth profile
 - mock adapter data
 - 示例页面内容
+
+另外要单独区分两类页面：
+
+- `showcase demo`
+  - `apps / tasks / users / chats / help-center / auth showcase / errors showcase`
+- `engineering baseline`
+  - `resources / settings / sign-in`
+
+前者更偏展示和布局参考，后者更适合作为业务接管起点。
 
 ## 3.1 认证页的模板口径
 
@@ -200,3 +245,4 @@ pnpm run test:browser:edge
 3. 按 `feature-first` 新增模块
 4. 复用现有 `contracts / services / modules / providers`
 5. 优先参考 `resources` 模块的模式实现新业务模块
+6. 这是保留完整展示面的模板，不要默认继续清 legacy

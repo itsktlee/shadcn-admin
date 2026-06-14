@@ -1,6 +1,7 @@
 import { navigationConfig } from '@/config/navigation'
 import { getModuleManifest, registeredModules } from './registry'
 import type {
+  LinkModuleManifest,
   ModuleManifest,
   ResolvedNavCollapsible,
   ResolvedNavGroup,
@@ -9,6 +10,20 @@ import type {
 } from './types'
 
 type PermissionResolver = (permission?: string | null) => boolean
+
+function isLinkModuleManifest(
+  manifest: ModuleManifest
+): manifest is LinkModuleManifest {
+  return manifest.kind === 'link'
+}
+
+function doesPathMatchManifestHref(pathname: string, href: string) {
+  if (href === '/') {
+    return pathname === '/'
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 function getRegisteredManifest(id: string): ModuleManifest | null {
   const manifest = getModuleManifest(id)
@@ -125,17 +140,20 @@ function resolveCommandMenuNavigationGroups(
   }))
 }
 
-function resolveRequiredPermissionForPath(pathname: string) {
+function resolveManifestForPath(pathname: string) {
   const matches = registeredModules
     .filter(
-      (manifest): manifest is Extract<ModuleManifest, { kind: 'link' }> =>
-        manifest.kind === 'link' &&
-        !!manifest.permission &&
-        (pathname === manifest.href || pathname.startsWith(`${manifest.href}/`))
+      (manifest): manifest is LinkModuleManifest =>
+        isLinkModuleManifest(manifest) &&
+        doesPathMatchManifestHref(pathname, manifest.href)
     )
     .sort((left, right) => right.href.length - left.href.length)
 
-  return matches[0]?.permission ?? null
+  return matches[0] ?? null
+}
+
+function resolveRequiredPermissionForPath(pathname: string) {
+  return resolveManifestForPath(pathname)?.permission ?? null
 }
 
 const resolvedNavigationGroups = resolveNavigationGroups()
@@ -143,7 +161,9 @@ const commandMenuNavigationGroups = resolveCommandMenuNavigationGroups()
 
 export {
   commandMenuNavigationGroups,
+  doesPathMatchManifestHref,
   resolveCommandMenuNavigationGroups,
+  resolveManifestForPath,
   resolveNavigationGroups,
   resolveRequiredPermissionForPath,
   resolvedNavigationGroups,

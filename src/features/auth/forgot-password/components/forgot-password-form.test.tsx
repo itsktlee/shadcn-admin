@@ -1,14 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, type RenderResult } from 'vitest-browser-react'
 import { userEvent, type Locator } from 'vitest/browser'
+import i18n from '@/i18n'
 import { ForgotPasswordForm } from './forgot-password-form'
 
-const navigateMock = vi.fn()
+const mocks = vi.hoisted(() => ({
+  navigate: vi.fn(),
+}))
 
-vi.mock('@tanstack/react-router', async (orig) => {
-  const actual = await orig<typeof import('@tanstack/react-router')>()
-  return { ...actual, useNavigate: () => navigateMock }
-})
+const FORM_LABELS = {
+  email: i18n.t('common.email'),
+  continue: i18n.t('auth.forgotPassword.action'),
+  emailEmpty: i18n.t('auth.forgotPassword.errors.emailRequired'),
+} as const
+
+vi.mock('../../legacy-auth-navigation', () => ({
+  navigateLegacyAuth: mocks.navigate,
+}))
 
 vi.mock('@/lib/utils', async (orig) => ({
   ...(await orig()),
@@ -24,8 +32,8 @@ describe('ForgotPasswordForm', () => {
     vi.clearAllMocks()
 
     screen = await render(<ForgotPasswordForm />)
-    emailInput = screen.getByRole('textbox', { name: /^Email$/i })
-    continueButton = screen.getByRole('button', { name: /^Continue$/i })
+    emailInput = screen.getByRole('textbox', { name: FORM_LABELS.email })
+    continueButton = screen.getByRole('button', { name: FORM_LABELS.continue })
   })
 
   it('renders email field and continue button', async () => {
@@ -36,7 +44,7 @@ describe('ForgotPasswordForm', () => {
   it('shows validation when submitting empty form', async () => {
     await userEvent.click(continueButton)
     await expect
-      .element(screen.getByText(/^Please enter your email\.$/i))
+      .element(screen.getByText(FORM_LABELS.emailEmpty))
       .toBeInTheDocument()
   })
 
@@ -44,9 +52,7 @@ describe('ForgotPasswordForm', () => {
     await userEvent.fill(emailInput, 'a@b.com')
     await userEvent.click(continueButton)
 
-    await vi.waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith({ to: '/otp' })
-    )
+    await vi.waitFor(() => expect(mocks.navigate).toHaveBeenCalledWith('/otp'))
 
     // Form should reset on success
     await expect.element(emailInput).toHaveValue('')

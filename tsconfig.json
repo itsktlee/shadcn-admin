@@ -43,14 +43,11 @@
   "exclude": [
     "node_modules",
     "src/assets/**",
-    "src/context/**",
     "src/features/**",
     "src/hooks/**",
-    "src/routes/**",
     "src/stores/**",
     "src/test-utils/**",
     "src/main.tsx",
-    "src/routeTree.gen.ts",
     "**/*.test.ts",
     "**/*.test.tsx"
   ]

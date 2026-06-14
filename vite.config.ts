@@ -3,7 +3,6 @@ import { execSync } from 'node:child_process'
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { playwright } from '@vitest/browser-playwright'
 
 type VitestBrowserName = 'chromium' | 'firefox' | 'webkit'
@@ -98,28 +97,6 @@ function resolveVitestBrowserRuntime(): VitestBrowserRuntime {
   )
 }
 
-function isVitestProcess() {
-  if (process.env.VITEST === 'true' || process.env.VITEST === '1') {
-    return true
-  }
-
-  if (process.env.NODE_ENV === 'test') {
-    return true
-  }
-
-  return process.argv.some((arg) => /\bvitest\b/i.test(arg))
-}
-
-function shouldEnableTanstackRouterPlugin() {
-  const explicit = process.env.VITEST_ENABLE_TANSTACK_ROUTER_PLUGIN?.trim()
-
-  if (explicit === 'true' || explicit === '1') {
-    return true
-  }
-
-  return !isVitestProcess()
-}
-
 const vitestBrowserRuntime = resolveVitestBrowserRuntime()
 const vitestBrowserProvider = playwright(
   vitestBrowserRuntime.browser === 'chromium' && vitestBrowserRuntime.channel
@@ -131,20 +108,9 @@ const vitestBrowserProvider = playwright(
     : undefined
 )
 
-const plugins = [react()]
-
-if (shouldEnableTanstackRouterPlugin()) {
-  plugins.unshift(
-    tanstackRouter({
-      target: 'react',
-      autoCodeSplitting: true,
-    })
-  )
-}
-
 // https://vite.dev/config/
 export default defineConfig({
-  plugins,
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -164,9 +130,7 @@ export default defineConfig({
         'src/components/ui/**',
         'src/assets/**',
         'src/tanstack-table.d.ts',
-        'src/routeTree.gen.ts',
         'src/test-utils/**',
-        'src/routes/**',
       ],
     },
   },

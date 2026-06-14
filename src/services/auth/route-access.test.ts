@@ -27,8 +27,12 @@ describe('auth route access', () => {
     const { isProtectedPath, isPublicPath, publicPaths } = await importRouteAccess()
 
     expect(publicPaths.has('/sign-in')).toBe(true)
+    expect(publicPaths.has('/errors/unauthorized')).toBe(true)
     expect(isPublicPath('/sign-in')).toBe(true)
+    expect(isPublicPath('/sign-in-2')).toBe(true)
+    expect(isPublicPath('/errors/forbidden')).toBe(true)
     expect(isProtectedPath('/sign-in')).toBe(false)
+    expect(isProtectedPath('/errors/not-found')).toBe(false)
   })
 
   it('includes resources in protected prefixes by default', async () => {
@@ -44,12 +48,14 @@ describe('auth route access', () => {
   it('removes resources from protected prefixes when the reference module is disabled', async () => {
     process.env.NEXT_PUBLIC_TEMPLATE_MODULE_RESOURCES = 'false'
 
-    const { getProtectedPrefixes, isProtectedPath } = await importRouteAccess()
+    const { getProtectedPrefixes, isProtectedPath, isPublicPath } =
+      await importRouteAccess()
 
     expect(getProtectedPrefixes()).not.toContain('/resources')
     expect(isProtectedPath('/resources')).toBe(false)
     expect(isProtectedPath('/resources/123')).toBe(false)
     expect(isProtectedPath('/tasks')).toBe(true)
     expect(isProtectedPath('/')).toBe(true)
+    expect(isPublicPath('/unknown')).toBe(false)
   })
 })

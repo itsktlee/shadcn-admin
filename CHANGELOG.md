@@ -1,3 +1,45 @@
+## [2026-06-14] - 认证主链、路由访问与 Legacy Runtime 收口
+
+### 修复
+
+- **变更摘要**：更新 [src/features/auth/forgot-password/components/forgot-password-form.test.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/forgot-password/components/forgot-password-form.test.tsx) 与 [src/features/auth/otp/components/otp-form.test.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/otp/components/otp-form.test.tsx)，将残留的 `@tanstack/react-router` mock 改为直接断言 [src/features/auth/legacy-auth-navigation.ts](/Users/ktlee/coding/shadcn-admin/src/features/auth/legacy-auth-navigation.ts) 的现行导航语义。
+- **变更摘要**：从 [package.json](/Users/ktlee/coding/shadcn-admin/package.json) 与 [pnpm-lock.yaml](/Users/ktlee/coding/shadcn-admin/pnpm-lock.yaml) 删除 `@tanstack/react-router`、`@tanstack/react-router-devtools`、`@tanstack/router-plugin`、`react-top-loading-bar`、`zustand`，收掉已经没有活跃源码依赖的 legacy 包。
+- **变更摘要**：更新 [docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md)，将依赖层清理从“阶段 C 候选项”收口为“阶段 C 已完成”。
+- **变更摘要**：删除 [src/context/**](/Users/ktlee/coding/shadcn-admin/src/context) 与 [src/components/layout/authenticated-layout.tsx](/Users/ktlee/coding/shadcn-admin/src/components/layout/authenticated-layout.tsx) 这一批已完全失活的 legacy provider / shell 参考面，并同步移除对应测试文件。
+- **变更摘要**：更新 [src/main.tsx](/Users/ktlee/coding/shadcn-admin/src/main.tsx)、[tsconfig.json](/Users/ktlee/coding/shadcn-admin/tsconfig.json)、[docs/template-active-surface.md](/Users/ktlee/coding/shadcn-admin/docs/template-active-surface.md) 与 [docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md)，统一模板口径为“remaining legacy 已不再包含旧 provider / authenticated shell 层”。
+- **变更摘要**：删除 [src/routes/**](/Users/ktlee/coding/shadcn-admin/src/routes)、[src/routeTree.gen.ts](/Users/ktlee/coding/shadcn-admin/src/routeTree.gen.ts)、[src/components/navigation-progress.tsx](/Users/ktlee/coding/shadcn-admin/src/components/navigation-progress.tsx) 与 [src/stores/auth-store.ts](/Users/ktlee/coding/shadcn-admin/src/stores/auth-store.ts) 这一批已退役 legacy 链，并同步移除依赖该旧 store 的 [src/features/auth/sign-in/components/user-auth-form.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/sign-in/components/user-auth-form.tsx) 及其测试。
+- **变更摘要**：更新 [vite.config.ts](/Users/ktlee/coding/shadcn-admin/vite.config.ts)、[tsconfig.json](/Users/ktlee/coding/shadcn-admin/tsconfig.json) 与 [eslint.config.js](/Users/ktlee/coding/shadcn-admin/eslint.config.js)，去掉已删除 legacy 路由树对应的配置残留，让 Vitest/Vite 运行配置回到当前 Next 模板需要的最小形态。
+- **变更摘要**：更新 [README.md](/Users/ktlee/coding/shadcn-admin/README.md)、[docs/template-active-surface.md](/Users/ktlee/coding/shadcn-admin/docs/template-active-surface.md)、[docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md) 与 [docs/template-runtime-config.md](/Users/ktlee/coding/shadcn-admin/docs/template-runtime-config.md)，统一模板口径为“旧路由树已物理移除，remaining legacy 只剩更窄的参考面”。
+- **变更摘要**：更新 [src/features/auth/sign-in/index.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/sign-in/index.tsx) 与 [src/features/auth/sign-in/sign-in-2.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/sign-in/sign-in-2.tsx)，让 `/sign-in`、`/sign-in-2` 都改为复用 [src/features/auth/components/template-sign-in-form.tsx](/Users/ktlee/coding/shadcn-admin/src/features/auth/components/template-sign-in-form.tsx) 的正式登录主链，不再把当前 Next 活跃入口挂到 legacy `UserAuthForm` 与 `auth-store` 上。
+- **变更摘要**：更新 [docs/template-active-surface.md](/Users/ktlee/coding/shadcn-admin/docs/template-active-surface.md) 与 [docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md)，对齐 auth 展示页与正式认证主链的边界说明，明确 `template-sign-in-form` 是当前活跃登录实现，而 `user-auth-form` 仅保留 legacy 参考价值。
+- **变更摘要**：更新 [src/modules/navigation.ts](/Users/ktlee/coding/shadcn-admin/src/modules/navigation.ts) 与 [src/services/auth/route-access.ts](/Users/ktlee/coding/shadcn-admin/src/services/auth/route-access.ts)，将路径匹配统一收敛到 module manifest 驱动的解析上，移除 `route-access.ts` 中对 dashboard/resources/tasks/apps/chats/users/settings/help-center 的手写 protected prefixes 维护。
+- **变更摘要**：补充 [src/modules/navigation.test.ts](/Users/ktlee/coding/shadcn-admin/src/modules/navigation.test.ts) 与 [src/services/auth/route-access.test.ts](/Users/ktlee/coding/shadcn-admin/src/services/auth/route-access.test.ts)，覆盖最具体 manifest 匹配、公开 auth/errors 页、reference module 开关以及未知路径不误判为 public 的关键行为。
+- **变更摘要**：重写 [src/main.tsx](/Users/ktlee/coding/shadcn-admin/src/main.tsx) 为 retired legacy notice entry，移除它对 `RouterProvider`、`routeTree.gen.ts`、旧 `context/**`、`useAuthStore` 与旧 query/error 链路的依赖，不再保留第二套可执行应用。
+- **变更摘要**：更新 [docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md)、[docs/template-active-surface.md](/Users/ktlee/coding/shadcn-admin/docs/template-active-surface.md) 与 [docs/template-runtime-config.md](/Users/ktlee/coding/shadcn-admin/docs/template-runtime-config.md)，统一 legacy 口径为“源码参考面仍保留，但 legacy runtime 已退役”。
+- **影响范围**：影响仓库的 legacy 清理边界与后续开源认知成本，避免接手者再把 `src/routes/**` 或旧 `auth-store` 误判为仍可恢复接线的运行主链。
+- **影响范围**：同时影响依赖树纯度；当前仓库的 remaining legacy 已不再通过依赖清单保留旧 `TanStack Router` / `zustand` / `react-top-loading-bar` 包。
+- **影响范围**：同时影响 remaining legacy 的分层边界；当前仓库里已不再保留旧 provider / authenticated shell 参考面，后续如果继续清理，重点将转到 `src/main.tsx` 与旧 feature 页面实现。
+- **影响范围**：同时影响 Vitest/Vite 的历史兼容口径；当前浏览器测试运行时仍保留，但已不再带 legacy 文件路由树插件分支。
+- **影响范围**：影响模板当前两个登录展示入口的 session 写入方式、重定向链路，以及后续接入正式认证服务时的主链判断。
+- **影响范围**：同时影响 middleware 的未登录回跳判断与 dashboard 内页权限守卫的路径解析一致性，降低新增模块时出现双处同步遗漏的风险。
+- **影响范围**：同时影响仓库对 legacy Vite 入口的心智模型，避免后续接手时把 `index.html + src/main.tsx` 误认为仍可继续接业务的第二套 runtime。
+- **验证证据**：已完成源码引用链核对，确认 [app/(auth)/sign-in/page.tsx](/Users/ktlee/coding/shadcn-admin/app/(auth)/sign-in/page.tsx) 与 [app/(auth)/sign-in-2/page.tsx](/Users/ktlee/coding/shadcn-admin/app/(auth)/sign-in-2/page.tsx) 均不再落到 `UserAuthForm`。
+- **验证证据**：已执行 `pnpm lint`；通过。已执行提权后的 `pnpm build`；通过，Next 生产构建成功生成 `/sign-in` 与 `/sign-in-2` 等路由产物。
+- **验证证据**：已启动本地 `http://localhost:3004` 并使用内置浏览器回归：`/sign-in` 可填写 `admin@template.dev / 1234567` 成功跳转回 `/`；`/sign-in-2` 在桌面视口下可正常访问，表单与右侧展示图均已挂载，浏览器控制台 `warn/error` 为空。
+- **验证证据**：已执行 `pnpm exec vitest run --browser.enabled=false src/services/auth/route-access.test.ts src/modules/navigation.test.ts`；7 个断言全部通过。已在 `http://127.0.0.1:3005` 使用内置浏览器回归：`/sign-in` 直接可访问，退出登录后访问 `/resources` 会回跳到 `/sign-in?redirect=%2Fresources`，浏览器控制台 `warn/error` 为空。
+- **验证证据**：已通过静态源码检查确认 [src/main.tsx](/Users/ktlee/coding/shadcn-admin/src/main.tsx) 不再 import `RouterProvider`、旧 `context/**` 或 `useAuthStore`；已再次执行 `pnpm lint` 与提权后的 `pnpm build`，两者均通过；已使用 Vite 本地入口 `http://localhost:3006/` 做浏览器回归，确认 legacy 入口只显示 retired notice 页面，浏览器控制台 `warn/error` 为空。
+- **验证证据**：已执行 `pnpm lint` 与 `pnpm build`；两者均通过。已通过静态检索确认当前活跃代码与模板文档不再把 `src/routes/**` / `src/routeTree.gen.ts` 描述为仍可接线的现存主链。
+- **验证证据**：已使用内置浏览器回归 `http://localhost:3004/`、`/sign-in-2`、`/sign-in`；首页与认证页均可正常打开。重启 dev server 后请求链保持 `200`，未再复现首页 500；同时已确认 `sign-in-2` 首屏图存在对应的图片预加载链接。
+- **验证证据**：已通过静态检索确认当前活跃代码与模板文档不再把 `src/context/**` 或 `authenticated-layout.tsx` 视为 remaining legacy 运行面，且 `src/context/` 目录已清空。已再次执行 `pnpm lint` 与 `pnpm build`，两者均通过；已使用内置浏览器回归 `http://localhost:3004/`、`/sign-in-2`、`/sign-in`，相关请求均返回 `200`。
+- **验证证据**：已通过静态检索确认当前活跃代码、构建配置与依赖清单中不再保留 `@tanstack/react-router`、`@tanstack/react-router-devtools`、`@tanstack/router-plugin`、`react-top-loading-bar`、`zustand` 的有效引用；已同步完成 `pnpm-lock.yaml` 更新，并执行 `pnpm exec vitest run --browser.headless src/features/auth/forgot-password/components/forgot-password-form.test.tsx src/features/auth/otp/components/otp-form.test.tsx`、`pnpm lint` 与 `pnpm build`，全部通过；已使用内置浏览器回归 `http://localhost:3004/`、`/sign-in-2`、`/sign-in`，相关页面可正常打开。
+
+### 文档
+
+- **变更摘要**：新增 [docs/template-showcase-strategy.md](/Users/ktlee/coding/shadcn-admin/docs/template-showcase-strategy.md)，把当前仓库的展示面策略明确拆成 `showcase demo / engineering baseline / optional legacy reference` 三层，避免接手者把它误读为默认继续收缩的极简空壳模板。
+- **变更摘要**：更新 [README.md](/Users/ktlee/coding/shadcn-admin/README.md)、[docs/template-adoption-guide.md](/Users/ktlee/coding/shadcn-admin/docs/template-adoption-guide.md)、[docs/template-active-surface.md](/Users/ktlee/coding/shadcn-admin/docs/template-active-surface.md) 与 [docs/template-legacy-removal-checklist.md](/Users/ktlee/coding/shadcn-admin/docs/template-legacy-removal-checklist.md)，将主叙事收口到“保留完整 demo admin 展示面的开源模板”，并把 legacy 清理明确降级为可选裁剪路线。
+- **影响范围**：影响后续开源说明、AI 接手提示词、模板接管顺序，以及对 `showcase page / reference page / legacy reference` 三者边界的理解成本。
+- **验证证据**：已完成文档交叉检查，确认 README、模板使用指南、活跃面说明与 legacy 清理清单之间的口径已对齐；同时已清除 `template-legacy-removal-checklist` 中残留的 Clerk 主链描述与“默认继续删”的误导性表述。
+
 ## [2026-06-13] - Auth 响应式与移动端收口
 
 ### 修复

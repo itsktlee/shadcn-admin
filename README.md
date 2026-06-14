@@ -14,7 +14,13 @@
 - 接入模板级 `i18next`
 - 提供动作级权限基线
 - 提供一个可关闭的 `Reference Module` 参考实现
+- 保留完整 demo admin 展示面
 - 提供最小自动回归测试基线
+
+它的默认交付形态不是“极简空壳”，而是同时提供：
+
+- 一套可以直接开源展示的完整后台模板
+- 一套可以逐步接管为真实业务系统的工程基线
 
 ## 当前技术栈
 
@@ -39,6 +45,22 @@
 - `resources` 参考列表 + CRUD 模块
 - 模板级 `Reference Module` 启停开关
 
+## 展示面分层
+
+当前仓库同时保留三层内容：
+
+- `Showcase Demo`
+  - `dashboard / apps / tasks / users / chats / help-center / auth showcase / errors showcase`
+- `Engineering Baseline`
+  - `resources / settings / sign-in`
+- `Optional Legacy Reference`
+  - `index.html + src/main.tsx` 与少量未接回 `app/**` 的旧参考实现
+
+这三层的详细边界见：
+
+- [模板展示面策略](./docs/template-showcase-strategy.md)
+- [当前模板活跃面与 Legacy 边界](./docs/template-active-surface.md)
+
 ## 目录锚点
 
 - `app/`
@@ -53,8 +75,8 @@
   - auth / adapter / query 等服务层
 - `src/providers/`
   - theme / i18n / auth / query provider
-- `docs/specs/`
-  - 蓝图、实施 checkpoint、交付审计记录
+- `docs/`
+  - 模板使用、展示面、运行时与裁剪路线说明
 
 ## 本地运行
 
@@ -73,7 +95,7 @@ pnpm dev
 说明：
 
 - `pnpm dev` 是当前正式的 `Next.js App Router` 开发入口
-- 仓库里保留的 `index.html + src/main.tsx + src/routes/**` 仅作为 legacy 迁移参考面，不是当前模板主运行链
+- 仓库里保留的 `index.html + src/main.tsx` 仅作为 retired legacy reference entry，不是当前模板主运行链
 
 ## Mock Auth 规则
 
@@ -114,18 +136,12 @@ pnpm run test:browser:chrome
 pnpm run test:browser:edge
 ```
 
-如果你确实要跑 legacy `src/routes/**` 相关测试，再显式回开文件路由插件：
-
-```bash
-VITEST_ENABLE_TANSTACK_ROUTER_PLUGIN=true pnpm test
-```
-
 说明：
 
 - 当前模板已经调整为优先复用本机默认浏览器
 - 若默认浏览器是 Chrome / Edge，会优先走系统已安装浏览器
 - 不再默认依赖 Playwright 自带 Chromium 二进制
-- 当前 `Vitest` 默认不再自动启用 legacy `TanStack Router` 文件路由插件；只有测试旧 `src/routes/**` 面时才建议显式回开
+- 当前 `Vitest` 配置只承担浏览器测试运行时，不再承载 legacy `TanStack Router` 文件路由树
 
 ## 参考模块开关
 
@@ -153,12 +169,13 @@ NEXT_PUBLIC_TEMPLATE_MODULE_RESOURCES=false
 
 不建议一开始就把壳层、权限、i18n、数据契约一起推倒重来。
 
+如果你准备开源或内部长期复用，默认建议保留完整 demo admin 展示面；只有在你明确要做“极简母模板分支”时，再进入裁剪路线。
+
 ## 深入文档
 
-- [模板蓝图](./docs/specs/2026-06-12_10-15_nextjs-shell-template-blueprint.md)
-- [实施清单](./docs/specs/2026-06-12_11-05_nextjs-shell-template-implementation-checklist.md)
+- [模板展示面策略](./docs/template-showcase-strategy.md)
 - [模板使用指南](./docs/template-adoption-guide.md)
-- [Legacy 清理清单](./docs/template-legacy-removal-checklist.md)
+- [Legacy 清理清单（可选裁剪路线）](./docs/template-legacy-removal-checklist.md)
 - [模板运行时配置](./docs/template-runtime-config.md)
 
 ## License

@@ -4,7 +4,11 @@
 
 如果你后续要把这个仓库当成长期母模板，请先看这份说明，再决定从哪里接手。
 
-如果你下一步准备继续清理旧残留，可继续看：
+如果你想先理解“为什么这里要同时保留完整展示面和工程基线”，先看：
+
+- [模板展示面策略](./template-showcase-strategy.md)
+
+如果你明确要做“极简母模板”或历史裁剪，可继续看：
 
 - [Legacy 清理清单](./template-legacy-removal-checklist.md)
 
@@ -27,29 +31,14 @@
 - dashboard shell 装配
 - 登录态路由守卫
 
-后续如果要改模板的全局行为，应该从这里入手，而不是从 `src/routes/**` 入手。
+后续如果要改模板的全局行为，应该从这里入手，而不是从已退役的 legacy 参考面入手。
 
 ### 1.2 当前真实页面覆盖范围
 
-当前 `app/**` 里主要分成三类页面：
+当前 `app/**` 里主要分成三层：
 
-1. 已有真实实现的页面
+1. `Showcase Demo`
    - `/`
-   - `/resources`
-   - `/settings`
-   - `/settings/account`
-   - `/settings/appearance`
-   - `/settings/display`
-   - `/settings/language`
-   - `/settings/notifications`
-   - `/sign-in`
-
-其中要特别注意：
-
-- `/` 当前接的是旧 `shadcn-admin` 的 dashboard showcase
-- 入口是 `src/features/dashboard/index.tsx`
-
-2. 已接入壳层、并已恢复为完整 showcase demo 的页面
    - `/tasks`
    - `/apps`
    - `/chats`
@@ -65,13 +54,26 @@
    - `/errors/internal-server-error`
    - `/errors/maintenance-error`
 
-   这一批页面当前已经不再是迁移占位卡，而是直接展示旧 `shadcn-admin` demo 内容，或展示与模板接管相关的静态 showcase 内容，用于保证模板开源展示面的完整度。其中 `auth / errors / help-center` 这组页面仍维持 showcase 定位，不作为当前模板业务实现的首选参考页。
-
-3. 可按配置关闭的参考模块页面
+2. `Engineering Baseline`
    - `/resources`
-   - 由 `src/config/template-modules.ts` 控制
+   - `/settings`
+   - `/settings/account`
+   - `/settings/appearance`
+   - `/settings/display`
+   - `/settings/language`
+   - `/settings/notifications`
+   - `/sign-in`
 
-这意味着：**当前模板真正可作为业务参考模块直接复用的，是 `resources` 和 `settings` 这一组；`apps / tasks / users / chats / auth showcase / errors showcase / help-center showcase` 已作为完整 demo 页面恢复，用来承接开源展示面。**
+3. `Configurable Reference Module`
+   - `/resources`
+   - 由 `src/config/template-modules.ts` 控制启停
+
+需要特别注意两点：
+
+- `/` 虽然当前入口是 `src/features/dashboard/index.tsx`，但它承担的是模板首页 showcase 角色
+- `resources / settings / sign-in` 更适合作为后续业务接管时的工程参考起点
+
+这意味着：**当前模板的正式运行面既包含完整 demo admin 展示页，也包含更适合复用的工程基线页。**
 
 ## 2. 当前活跃支撑层
 
@@ -132,6 +134,7 @@
 - `src/features/users/**`
 - `src/features/chats/**`
 - `src/features/help-center/**`
+- `src/features/auth/sign-in/index.tsx`
 - `src/features/auth/sign-in/sign-in-2.tsx`
 - `src/features/auth/sign-up/**`
 - `src/features/auth/forgot-password/**`
@@ -144,9 +147,16 @@
 - `resources` 的 list + CRUD + adapter + query + permission
 - `settings` 的子导航与表单页组织
 - `apps / tasks / users / chats` 的完整 demo 页面布局与视觉组织
-- `sign-in-2 / sign-up / forgot-password / otp / errors / help-center` 的独立示例页结构与壳层边界处理
+- `sign-in / sign-in-2 / sign-up / forgot-password / otp / errors / help-center` 的独立示例页结构与壳层边界处理
 
-## 3. manifest 是活跃的，但不等于整组 feature 都活跃
+这里要区分两件事：
+
+- “可直接拿来写业务”的工程参考程度
+- “是否已经接在当前 Next 主链上”
+
+`apps / tasks / users / chats / help-center / auth showcase / errors showcase` 这些页面现在**已经接在当前 Next 主链上**，只是它们更偏展示面，不是首选工程基线。
+
+## 3. manifest 是活跃的，很多 feature 页面本身也已经是活跃展示面
 
 这是当前仓库里最容易误判的一点。
 
@@ -164,76 +174,64 @@
 - 这些模块的导航元数据仍是活跃的
 - sidebar、command menu、受保护路由前缀仍然会引用它们
 
-但这**不表示**对应的旧页面实现也仍然是当前正式运行面。
+而在当前仓库里，很多 `manifest` 对应的 feature 页面本身也已经被 `app/**` 接回来了。
 
 例如：
 
 - `src/features/users/manifest.ts` 是活跃的
-- 但 `src/features/users/index.tsx` 以及其旧表格实现并不是当前 Next 页面主链
+- `app/(dashboard)/users/page.tsx` 当前也确实接到了 `src/features/users/index.tsx`
 
 因此后续接管时要区分：
 
 - `manifest.ts` 是否属于当前导航注册链
-- `index.tsx / old components / old tests` 是否仍属于当前实际页面实现
+- `index.tsx` 当前是作为 `showcase demo` 还是 `engineering baseline`
+- 目录里的旧测试、旧桥接代码、历史兼容逻辑是否仍值得继续保留
 
 ## 4. 当前 Legacy 参考面
 
 以下内容目前应视为 **legacy 迁移参考面**，不是当前正式模板主线。
 
-### 4.1 旧路由树
+### 4.0 已退役的 legacy 入口
+
+- `index.html`
+- `src/main.tsx`
+
+当前这两个文件仍保留在仓库里，但边界已经更新为：
+
+- `index.html` 仍会加载 `/src/main.tsx`
+- `src/main.tsx` 现在只渲染 retired legacy notice
+- 它不再启动旧 `TanStack Router + Vite` runtime
+
+也就是说，仓库里仍保留 legacy 入口源码，但已经不再保留“第二套可执行应用”。
+
+### 4.1 已物理移除的首批 legacy 链
 
 - `src/routes/**`
+- `src/routeTree.gen.ts`
+- `src/components/navigation-progress.tsx`
+- `src/stores/auth-store.ts`
+- `src/features/auth/sign-in/components/user-auth-form.tsx`
 
-这是原先 `TanStack Router` 体系残留的主要目录。它包含：
+这批文件已经从仓库中删除。它们不再是“还能接回来”的预留面，而是已经完成退役的旧实现。
 
-- auth 路由
-- dashboard 路由
-- errors 路由
-
-现在这些不再是当前 Next 模板的入口来源。
-
-### 4.2 旧 context 体系
-
-- `src/context/**`
-
-这些是旧 Vite 版本留下的 provider / layout 状态组织方式。当前正式运行面已经改用 `src/providers/**`。
-
-当前还有一个要点：
-
-- 非 legacy 主链里的 `@/context/*` direct 引用已经清空
-- 当前还能直接看到的 `@/context/*` 依赖，主要集中在 `src/context/**` 自身及其旧测试面
-
-### 4.3 旧 feature 页面实现
+### 4.2 已进一步收窄的旧 shell / feature 参考实现
 
 以下这类文件目前更多是“迁移参考遗留面”，不应作为新开发的默认起点：
 
-- `src/components/layout/authenticated-layout.tsx`
-- `src/components/navigation-progress.tsx`
 - 未接入当前 `app/**` 主链的旧 `TanStack Router` 页面与布局文件
 
-也就是说，真正还带着旧路由范式的，主要集中在 legacy `src/routes/**` 周边，而不是当前 `app/**` 已接线的 showcase 页面本身。
+也就是说，当前 remaining legacy 已经不再是一整套旧路由树，也不再包含旧 provider 壳，而是更窄的旧页面实现参考面。
 
 其中有一类情况要单独说明：
 
-- `apps / tasks / users / chats` 这四组 feature 树里，已经重新接回当前 `app/**` 主链，作为 showcase 页面存在
-- 它们负责恢复完整 demo admin 的开源展示面
-- 但这不改变 `resources / settings / sign-in` 仍是模板工程标准参考页这一层级
+- `apps / tasks / users / chats / help-center / auth showcase / errors showcase` 已经重新接回当前 `app/**` 主链
+- 它们是当前正式模板的一部分
+- 但它们承担的是展示面角色，不等于都是首选工程基线
 
-其中 `src/components/layout/authenticated-layout.tsx` 需要特别说明：
+所以更准确的说法是：
 
-- 它仍属于 legacy `TanStack Router` layout 面
-- 但当前已改为复用 `src/providers/dashboard-providers.tsx`
-- 这表示它的 provider 组合已与现行 dashboard 壳对齐，不再直接依赖旧 `src/context/**`
-- 同时，`Outlet` 的渲染职责也已经迁回 `src/routes/**`
-- 因此它现在本身已是纯布局组件，不再直接依赖 `@tanstack/react-router`
-
-其中 `src/components/navigation-progress.tsx` 也要单独说明：
-
-- 它仍保留在仓库里作为 legacy 参考组件
-- 但当前已经不再挂载到 `src/routes/__root.tsx`
-- 也就是说，它不再属于当前仍参与 legacy 运行时的旧组件
-
-所以这些旧 feature 可以当视觉和交互参考，但不应该被误认为“当前已接线的正式页面实现”。
+- 它们是当前正式页面实现
+- 但后续做真实业务接管时，优先级仍低于 `resources / settings / sign-in`
 
 ## 5. 后续接管时应该从哪里开始
 
@@ -242,25 +240,23 @@
 1. 先改 `src/config/navigation.ts`
 2. 再改各业务模块的 `manifest.ts`
 3. 用 `resources` 的模式新增真实业务模块
-4. 逐步用你的业务页面替换当前占位页
-5. 等你自己的模块接管完成后，再考虑清理 legacy 参考面
+4. 逐步用你的业务页面替换当前 showcase demo
+5. 只有在你明确要走极简路线时，再考虑清理 legacy 参考面
 
 不要一上来从这些地方开始：
 
-- `src/routes/**`
-- `src/context/**`
 - 旧 `src/features/auth/*` 页面实现
 - 旧 `src/features/tasks/*` / `src/features/users/*` 列表实现
 
-因为它们不是当前 Next 模板的主链，直接在这些文件上续写，很容易把项目重新拉回旧 Vite/TanStack 结构。
+因为它们虽然已经接回当前 Next 主链，但承担的是展示面角色；如果直接把业务长期堆在这些 demo 页面上，后续模块边界会比较混。
 
 ## 6. 如果后续要继续清理 legacy
 
-建议按这个顺序做：
+这不是当前模板的默认下一步，只在你明确要做裁剪分支时再看。建议顺序是：
 
 1. 先确认 `app/**` 是否已经完全替代对应页面
 2. 再确认 `manifest.ts` 是否还需要保留
-3. 最后才移除 `src/routes/**`、`src/context/**` 和旧 feature 页面实现
+3. 最后才移除剩余旧 feature 页面实现与相关依赖
 
 尤其注意：
 
@@ -271,6 +267,9 @@
 
 现在这仓库应该这样理解：
 
-- **正式模板主线**：`app/** + providers + modules + config + services + resources/settings`
-- **可保留的迁移参考**：`src/routes/** + src/context/** + 若干旧 feature 页面实现`
+- **正式模板主线**：`app/** + providers + modules + config + services`
+- **完整展示面**：`dashboard + apps + tasks + users + chats + help-center + auth showcase + errors showcase`
+- **工程基线**：`resources + settings + sign-in`
+- **已物理删除的 legacy 链**：`src/routes/** + src/routeTree.gen.ts + auth-store + navigation-progress + src/context/** + authenticated-layout`
+- **可保留的迁移参考**：`src/main.tsx + 若干旧 feature 页面实现`
 - **接管时优先入口**：`navigation / manifest / resources 模式`

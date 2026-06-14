@@ -140,7 +140,37 @@ VITEST_BROWSER_INSTANCE=webkit
 - [src/providers/theme-provider.tsx](/Users/ktlee/coding/shadcn-admin/src/providers/theme-provider.tsx)
 - [src/i18n/index.ts](/Users/ktlee/coding/shadcn-admin/src/i18n/index.ts)
 
-## 5. 后续接管建议
+## 5. Legacy Reference Entry
+
+当前仓库仍保留：
+
+- `index.html`
+- `src/main.tsx`
+
+但它们现在的定位已经是：
+
+- 仅作为 retired legacy reference entry 保留
+- 不再启动旧 `TanStack Router + Vite` runtime
+- 不应被视为当前模板的第二个开发入口
+
+补充说明：
+
+- 旧 `src/routes/**` 与 `src/routeTree.gen.ts` 已经从仓库中移除
+- `vite.config.ts` 现在只承担 Vitest 浏览器运行时，不再连接 legacy 路由树插件
+
+如果你需要运行当前正式模板，请使用：
+
+```bash
+pnpm dev
+```
+
+如果你看到 `index.html` 或 `src/main.tsx`，应把它们理解为：
+
+- 用来说明旧入口曾经长什么样
+- 用来保留迁移参考面
+- 不是当前业务开发应继续接线的 runtime
+
+## 6. 后续接管建议
 
 如果你后续把这个仓库直接当业务母模板，建议：
 

@@ -8,11 +8,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AuthLayout } from '../auth-layout'
-import { readLegacyRedirectParam } from '../legacy-auth-navigation'
-import { UserAuthForm } from './components/user-auth-form'
+import { TemplateSignInForm } from '../components/template-sign-in-form'
 
 export function SignIn() {
-  const redirect = readLegacyRedirectParam()
   const { t } = useTranslation()
 
   return (
@@ -34,7 +32,7 @@ export function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UserAuthForm redirectTo={redirect} />
+          <TemplateSignInForm />
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>

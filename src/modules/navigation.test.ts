@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { permissionProfiles } from '@/services/auth/shared'
 import {
+  resolveManifestForPath,
   resolveCommandMenuNavigationGroups,
   resolveNavigationGroups,
   resolveRequiredPermissionForPath,
@@ -65,5 +66,14 @@ describe('modules/navigation', () => {
     )
     expect(resolveRequiredPermissionForPath('/sign-in')).toBeNull()
     expect(resolveRequiredPermissionForPath('/unknown')).toBeNull()
+  })
+
+  it('resolves the most specific registered manifest for a pathname', () => {
+    expect(resolveManifestForPath('/settings/language')?.id).toBe(
+      'settings-language'
+    )
+    expect(resolveManifestForPath('/resources/123')?.id).toBe('resources')
+    expect(resolveManifestForPath('/sign-in-2')?.id).toBe('auth-sign-in-2')
+    expect(resolveManifestForPath('/unknown')).toBeNull()
   })
 })

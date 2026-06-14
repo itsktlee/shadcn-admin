@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
 import { LanguageSwitch } from '@/components/language-switch'
+import { TemplateSignInForm } from '../components/template-sign-in-form'
 import dashboardDark from './assets/dashboard-dark.png'
 import dashboardLight from './assets/dashboard-light.png'
-import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn2() {
   const { t } = useTranslation()
@@ -38,7 +38,7 @@ export function SignIn2() {
               </a>
             </p>
           </div>
-          <UserAuthForm />
+          <TemplateSignInForm />
           <p className='px-8 text-center text-sm text-muted-foreground'>
             {t('auth.legalPrefixSignIn')}{' '}
             <a
@@ -71,6 +71,7 @@ export function SignIn2() {
           width={1024}
           height={1151}
           alt='Shadcn-Admin'
+          priority
         />
         <Image
           src={dashboardDark}
@@ -78,6 +79,7 @@ export function SignIn2() {
           width={1024}
           height={1138}
           alt='Shadcn-Admin'
+          priority
         />
       </div>
     </div>
